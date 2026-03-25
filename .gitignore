@@ -1,0 +1,11 @@
+data/
+phase1_baseline/corpus/documents.jsonl
+phase1_baseline/corpus/manifest.json
+phase1_baseline/measurements/
+phase1_baseline/reference_pack.pkl
+phase1_baseline/reference_pack_manifest.json
+__pycache__/
+*.pyc
+*.pkl
+*.npy
+*.bz2

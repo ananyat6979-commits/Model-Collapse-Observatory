@@ -1,0 +1,77 @@
+# MCO Experiment Configuration
+# ============================================================
+# THIS FILE IS IMMUTABLE AFTER PHASE 2 BEGINS.
+# Any change after Phase 2 starts invalidates all cross-phase
+# comparisons and requires restarting from Phase 1.
+# ============================================================
+
+# --- Model ---
+model_id: distilgpt2
+model_params: 82_000_000  # 82M parameters
+
+# --- Corpus ---
+corpus_source: wikipedia_bookcorpus
+corpus_language: en
+corpus_size_docs: 5000
+corpus_size_tokens_approx: 500000
+corpus_dump_date: "2024-12-01"
+corpus_dump_url: "https://dumps.wikimedia.org/enwiki/20241201/"  # fill in exact filename
+corpus_sha256: "FILL_IN_AFTER_DOWNLOAD"
+corpus_min_doc_length_tokens: 50    # discard documents shorter than this
+corpus_max_doc_length_tokens: 1000  # truncate documents longer than this
+dedup_method: minhash
+dedup_threshold: 0.85               # Jaccard similarity threshold for near-duplicate removal
+
+# --- Reference Encoder ---
+encoder_id: sentence-transformers/all-MiniLM-L6-v2
+encoder_embedding_dim: 384
+encoder_frozen: true
+# NOTE: encoder must never change after Phase 1. Results across
+# encoders are NOT comparable. If encoder changes, restart from Phase 1.
+
+# --- Collapse Simulation ---
+generations_k: 3                    # G0, G1, G2, G3
+contamination_ratio: 0.5
+contamination_schedule: fixed       # same R at every generation (not R^k)
+synthetic_docs_per_generation: 5000
+
+# --- Fine-tuning (Phase 2) ---
+finetuning_lr: 5.0e-5
+finetuning_steps: 3000
+finetuning_batch_size: 8
+finetuning_warmup_steps: 100
+finetuning_weight_decay: 0.01
+finetuning_max_grad_norm: 1.0
+
+# --- Measurement (Phase 3) ---
+pca_components: 20                  # reduced from 50 for CPU memory budget
+kde_bandwidth_method: cross_validation
+kde_cv_folds: 5
+tail_threshold_percentile: 5        # 5th percentile of baseline log-likelihood — FIXED
+kde_fit_sample_size: 2000           # subsample of baseline for KDE fit (CPU memory)
+semantic_coverage_gmm_components: 10 # GMM modes for coverage estimation
+
+# --- Statistical Tests (Phase 4) ---
+significance_threshold: 0.01
+bonferroni_n_tests: 12              # 4 layers × 3 generations
+effect_size_threshold: 0.3         # Cohen's d minimum for "first detection"
+
+# --- Reproducibility ---
+seed: 42
+pythonhashseed: "42"
+cublas_workspace_config: ":4096:8"
+omp_num_threads: 1
+mkl_num_threads: 1
+
+# --- Paths ---
+reference_pack_path: phase1_baseline/reference_pack.pkl
+corpus_manifest_path: phase1_baseline/corpus/manifest.json
+measurements_db_path: phase3_measurements/results_db/measurements.db
+collapse_manifest_path: phase2_simulation/collapse_manifest.json
+
+# --- Platforms ---
+platform_phase1: laptop_cpu
+platform_phase2: kaggle_t4
+platform_phase3: laptop_dev_kaggle_runs
+platform_phase4: laptop_cpu
+platform_phase5: laptop_cpu
