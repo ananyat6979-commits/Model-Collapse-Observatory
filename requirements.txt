@@ -16,8 +16,6 @@ scikit-learn==1.4.1.post1
 # NLP utilities
 datasets==2.18.0           # HuggingFace datasets (for Phase 5 TinyStories)
 
-# Intrinsic dimensionality
-skdim==0.3.4               # Two-Nearest-Neighbors estimator (Phase 3 semantic layer)
 
 # Dashboard
 streamlit==1.32.2          # Phase 3 deliverable

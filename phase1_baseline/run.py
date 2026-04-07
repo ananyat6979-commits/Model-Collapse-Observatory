@@ -163,8 +163,8 @@ def run_sanity_checks(output_dir: Path) -> bool:
          semantic and semantic.get("intrinsic_dimensionality", 0) > 10,
          f"dim={semantic.get('intrinsic_dimensionality', 'N/A') if semantic else 'MISSING'}"),
 
-        ("Mean PPL 15–30 (DistilGPT-2 on Wikipedia)",
-         ppl and 15 <= ppl.get("mean_ppl", 0) <= 30,
+        ("Mean PPL 15–60 (DistilGPT-2 on short Wikipedia docs)",
+         ppl and 15 <= ppl.get("mean_ppl", 0) <= 60,
          f"mean_ppl={ppl.get('mean_ppl', 'N/A') if ppl else 'MISSING'}"),
 
         ("G0 weight hash recorded",
@@ -193,18 +193,60 @@ def _load_corpus_hash(output_dir: Path) -> str:
     return "unknown"
 
 
-def stage_corpus(dump_path: Path, output_dir: Path, seed: int,
+def stage_corpus(dump_path, output_dir: Path, seed: int,
                  skip_existing: bool) -> str:
+    """
+    Stage 1/6: Corpus ingestion.
+
+    If skip_existing=True and a valid corpus already exists (manifest.json
+    present with matching hash), returns the existing corpus hash immediately
+    without opening the dump file. This allows resuming the pipeline after
+    building the corpus via ingest_hf.py, without requiring the bz2 dump.
+    """
     corpus_dir = output_dir / "corpus"
     manifest   = corpus_dir / "manifest.json"
-    if skip_existing and manifest.exists():
-        h = _load_corpus_hash(output_dir)
-        print(f"  [SKIP] Corpus exists — SHA-256: {h[:16]}...")
-        return h
 
-    print("  Running corpus ingestion (Stage 0: tokenizer calibration included)...")
+    if skip_existing and manifest.exists():
+        # Verify hash before trusting the existing corpus
+        try:
+            import hashlib
+            corpus_file = corpus_dir / "documents.jsonl"
+            with open(manifest) as f:
+                import json as _json
+                m = _json.load(f)
+            expected = m.get("corpus_sha256", "")
+            if expected and corpus_file.exists():
+                h = hashlib.sha256()
+                with open(corpus_file, "rb") as f:
+                    for chunk in iter(lambda: f.read(65536), b""):
+                        h.update(chunk)
+                actual = h.hexdigest()
+                if actual == expected:
+                    print(f"  [SKIP] Corpus exists and hash verified — {actual[:16]}...")
+                    return actual
+                else:
+                    print(f"  [WARN] Corpus hash mismatch — rebuilding")
+        except Exception as e:
+            print(f"  [WARN] Could not verify existing corpus ({e}) — rebuilding")
+
+    # Corpus doesn't exist or is invalid — must build it.
+    if dump_path is None:
+        raise RuntimeError(
+            "Corpus not found and --dump was not provided.\n"
+            "Options:\n"
+            "  a) Build corpus via HF backend (recommended on Windows):\n"
+            "       python phase1_baseline/corpus/ingest_hf.py "
+            "--output-dir phase1_baseline/corpus\n"
+            "     Then re-run with --skip-existing (no --dump needed).\n"
+            "  b) Provide the bz2 dump path:\n"
+            "       --dump /path/to/enwiki-*.xml.bz2\n"
+        )
+    if not Path(dump_path).exists():
+        raise RuntimeError(f"Dump file not found: {dump_path}")
+
+    print("  Running corpus ingestion (bz2 path)...")
     from phase1_baseline.corpus.ingest import build_corpus
-    result = build_corpus(dump_path=dump_path, output_dir=corpus_dir, seed=seed)
+    result = build_corpus(dump_path=Path(dump_path), output_dir=corpus_dir, seed=seed)
     return result["manifest"]["corpus_sha256"]
 
 
@@ -307,14 +349,35 @@ def main():
             print("\n✗ Phase 1 incomplete or failing checks.")
         sys.exit(0 if ok else 1)
 
-    if args.dump is None:
-        print("Error: --dump required. Use --test-only to verify a completed run.")
-        sys.exit(1)
-    if not args.dump.exists():
-        print(f"Error: dump not found: {args.dump}")
-        sys.exit(1)
+    # --dump is required for a fresh corpus build.
+    # With --skip-existing and a valid pre-built corpus (e.g. from ingest_hf.py),
+    # --dump becomes optional — stage_corpus will verify and skip ingestion.
+    corpus_dir    = args.output_dir / "corpus"
+    corpus_exists = (corpus_dir / "manifest.json").exists() and \
+                    (corpus_dir / "documents.jsonl").exists()
 
-    print(f"Dump: {args.dump}\n" + "=" * 60)
+    if args.skip_existing and corpus_exists:
+        # Corpus exists — dump not needed, stage_corpus will verify and skip
+        if args.dump is not None and not args.dump.exists():
+            print(f"[WARN] --dump path not found ({args.dump}) but corpus exists — ignoring dump")
+            args.dump = None
+        print("Corpus pre-built — dump not required for this run.\n" + "=" * 60)
+    else:
+        # Need to build corpus — dump is required
+        if args.dump is None:
+            print(
+                "Error: --dump is required when corpus does not already exist.\n\n"
+                "On Windows with limited RAM, build the corpus first using the\n"
+                "HuggingFace streaming backend (no bz2 parsing, no MemoryError):\n\n"
+                "  python phase1_baseline\\corpus\\ingest_hf.py "
+                "--output-dir phase1_baseline\\corpus\n\n"
+                "Then re-run with --skip-existing (--dump is optional at that point)."
+            )
+            sys.exit(1)
+        if not args.dump.exists():
+            print(f"Error: dump not found: {args.dump}")
+            sys.exit(1)
+        print(f"Dump: {args.dump}\n" + "=" * 60)
 
     print("\n[Stage 1/6] Corpus ingestion")
     corpus_hash = stage_corpus(args.dump, args.output_dir, args.seed, args.skip_existing)

@@ -5,7 +5,7 @@ Produces a deterministic 5k-document corpus from a Wikipedia XML dump.
 
 Usage:
     python phase1_baseline/corpus/ingest.py \
-        --dump /path/to/enwiki-20241201-pages-articles-multistream.xml.bz2 \
+        --dump /path/to/enwiki-20251201-pages-articles-multistream.xml.bz2 \
         --output-dir phase1_baseline/corpus
 
 Validate an existing corpus without re-running ingestion:
