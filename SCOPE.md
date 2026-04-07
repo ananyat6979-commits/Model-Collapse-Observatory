@@ -35,16 +35,32 @@ These are immutable after Phase 2 begins. Any change requires starting over from
 
 ```yaml
 model:               distilgpt2           # 82M parameters — only supported model
-corpus_source:       Wikipedia (frozen dump) + BookCorpus subset
-corpus_url:          https://dumps.wikimedia.org/enwiki/20241201/
-                     # FILL IN: exact dump filename used
-corpus_sha256:       FILL_IN_AFTER_DOWNLOAD
+
+corpus_source:       HuggingFace wikipedia/20220301.en streaming backend
+                     # Operational constraint: raw Wikimedia bz2 dump (enwiki-20251201,
+                     # md5-verified, retained in data/) causes MemoryError during
+                     # decompression on Windows with limited RAM. The HF streaming
+                     # backend processes articles one at a time with no large buffer
+                     # allocation. Content source is English Wikipedia. Snapshot date
+                     # difference (2022 vs 2025) is an acknowledged uncertainty —
+                     # see Honest Limitations section below.
+
+corpus_hf_dataset:   wikipedia
+corpus_hf_config:    "20220301.en"
+corpus_hf_split:     train
+corpus_sha256:       FILL_IN_FROM_MANIFEST_AFTER_HF_BUILD
 corpus_size_docs:    5000
 corpus_size_tokens:  ~500000
 corpus_language:     English only
+
+# Raw dump kept for provenance — not used in ingestion.
+corpus_dump_url:     https://dumps.wikimedia.org/enwiki/20251201/enwiki-20251201-pages-articles-multistream.xml.bz2
+corpus_dump_md5:     f4b1a4c7ef3f89f5bd9fc8cae6fbb56
+
 encoder:             all-MiniLM-L6-v2     # frozen permanently from Phase 1
                      # CPU-friendly; correct choice for this compute budget
                      # Results NOT comparable across different encoder choices
+
 generations_k:       3                   # G0, G1, G2, G3
 contamination_ratio: 0.5                 # fixed across all generations
 contamination_schedule: fixed            # same ratio every generation (not R^k)
@@ -148,12 +164,30 @@ Every paper or preprint from this project must state all of the following:
 
 - Results are calibrated at DistilGPT-2 scale (82M). Detection thresholds may not
   generalize to larger models.
-- Corpus is English Wikipedia + BookCorpus. Domain-specific collapse may differ.
+- Corpus is English Wikipedia only (BookCorpus excluded — no reproducible source).
 - Only one contamination ratio (R=0.5) and one schedule (fixed) are tested.
   Detection order may differ at other ratios.
 - k=3 generations is a small simulation. Longer collapse chains may behave differently.
 - The perplexity inversion signal is novel and unvalidated by prior work. Treat Phase 4
   results for this signal as preliminary evidence, not established fact.
-- Phase 5 baseline is Wikipedia/BookCorpus, not Common Crawl. Contamination index
-  scores for CC-derived datasets reflect deviation from a Wikipedia-style reference,
-  not an internet-text reference.
+- Phase 5 baseline is Wikipedia, not Common Crawl. Contamination index scores for
+  CC-derived datasets reflect deviation from a Wikipedia-style reference, not an
+  internet-text reference.
+- Calibration samples are truncated at 500 tokens before tokenizer calibration.
+  Very long, jargon-dense articles may slightly underrepresent their true subword
+  density in the p95 ratio. The 20-token safety margin accounts for this.
+- MinHash deduplication is O(n²) in candidate count. This is intentional and
+  sufficient at 5k documents. It is not designed for corpus sizes above ~20k
+  without LSH bucketing. This is a known scale constraint of the pilot
+  implementation, documented here to distinguish it from an oversight.
+- Corpus ingestion used HuggingFace `wikipedia/20220301.en` streaming backend
+  instead of the raw Wikimedia bz2 dump (enwiki-20251201), because Python's
+  bz2 decompression caused MemoryError on the local Windows machine with
+  limited RAM. This is a documented operational workaround. The raw dump was
+  downloaded and md5-verified and is retained in data/ for provenance.
+  The HF snapshot (January 2022) predates the downloaded dump (December 2025).
+  Whether this snapshot difference materially affects baseline statistics is
+  an acknowledged uncertainty — it is a reasonable engineering assumption that
+  English Wikipedia's distributional properties are stable across three years,
+  but this has not been empirically verified for this specific project.
+  Both the snapshot date and ingestion path are recorded in manifest.json.

@@ -10,17 +10,28 @@ model_id: distilgpt2
 model_params: 82_000_000  # 82M parameters
 
 # --- Corpus ---
-corpus_source: wikipedia_bookcorpus
+corpus_source: huggingface_wikipedia_streaming
+# Operational note: Raw bz2 XML dump (enwiki-20251201) was downloaded and
+# md5-verified but causes MemoryError during decompression on Windows with
+# limited RAM. Corpus is built via HuggingFace wikipedia/20220301.en
+# streaming backend. Content source is English Wikipedia. This is a
+# documented operational constraint — see SCOPE.md and manifest.json.
+corpus_hf_dataset: wikipedia
+corpus_hf_config: "20220301.en"
+corpus_hf_split: train
 corpus_language: en
 corpus_size_docs: 5000
 corpus_size_tokens_approx: 500000
-corpus_dump_date: "2024-12-01"
-corpus_dump_url: "https://dumps.wikimedia.org/enwiki/20241201/"  # fill in exact filename
-corpus_sha256: "FILL_IN_AFTER_DOWNLOAD"
-corpus_min_doc_length_tokens: 50    # discard documents shorter than this
-corpus_max_doc_length_tokens: 1000  # truncate documents longer than this
+# Raw dump kept in data\ for provenance but not used in ingestion path.
+# Do not commit the dump to git (22GB). See .gitignore.
+corpus_dump_date: "2025-12-01"
+corpus_dump_url: "https://dumps.wikimedia.org/enwiki/20251201/enwiki-20251201-pages-articles-multistream.xml.bz2"
+corpus_dump_md5: "f4b1a4c7ef3f89f5bd9fc8cae6fbb56"
+corpus_sha256: "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395"
+corpus_min_doc_length_tokens: 50
+corpus_max_doc_length_tokens: 135
 dedup_method: minhash
-dedup_threshold: 0.85               # Jaccard similarity threshold for near-duplicate removal
+dedup_threshold: 0.85
 
 # --- Reference Encoder ---
 encoder_id: sentence-transformers/all-MiniLM-L6-v2
@@ -56,7 +67,8 @@ significance_threshold: 0.01
 bonferroni_n_tests: 12              # 4 layers × 3 generations
 effect_size_threshold: 0.3         # Cohen's d minimum for "first detection"
 
-# --- Reproducibility ---
+# --- Reproducibility (fill in after first pipeline run) ---
+g0_model_weights_sha256: "a6b9f68a1f37425ed26e0cde38f98c085fe0bf201356948e5d7e690d0d53c151"
 seed: 42
 pythonhashseed: "42"
 cublas_workspace_config: ":4096:8"
