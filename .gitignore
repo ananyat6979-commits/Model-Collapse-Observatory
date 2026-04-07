@@ -4,8 +4,15 @@ phase1_baseline/corpus/manifest.json
 phase1_baseline/measurements/
 phase1_baseline/reference_pack.pkl
 phase1_baseline/reference_pack_manifest.json
+phase1_baseline/reference_pack.pkl
+phase1_baseline/measurements/kde_params.pkl
+phase1_baseline/measurements/pca_transform.pkl
+phase1_baseline/measurements/semantic_embeddings.npy
+phase1_baseline/measurements/semantic_embeddings_pca.npy
 __pycache__/
 *.pyc
 *.pkl
 *.npy
 *.bz2
+mco-env/
+enwiki-latest-md5sums.txt
