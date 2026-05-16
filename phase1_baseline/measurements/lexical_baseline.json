@@ -1,0 +1,16 @@
+{
+  "_corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "_computed_at": "2026-04-06T23:52:27.455266",
+  "corpus_ttr": 0.142329,
+  "corpus_types": 85032,
+  "corpus_tokens": 597431,
+  "per_doc_ttr_mean": 0.689671,
+  "per_doc_ttr_std": 0.072554,
+  "per_doc_ttr_median": 0.695652,
+  "entropy_1gram": 11.93064,
+  "entropy_2gram": 16.818131,
+  "entropy_3gram": 18.339614,
+  "vocab_size_unigrams": 85032,
+  "vocab_size_bigrams": 317225,
+  "vocab_size_trigrams": 460543
+}

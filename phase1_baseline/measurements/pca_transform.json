@@ -1,0 +1,9 @@
+{
+  "_corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "_sklearn_version": "1.4.1.post1",
+  "n_components": 20,
+  "n_features_in": 384,
+  "explained_variance_ratio_sum": 0.343552,
+  "first_component_first_element": 0.037577949464321136,
+  "sign_convention": "first_component[0] > 0 (enforced at save and load)"
+}

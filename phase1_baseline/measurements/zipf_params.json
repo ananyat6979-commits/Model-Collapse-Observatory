@@ -1,0 +1,13 @@
+{
+  "_corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "zipf_alpha": 0.951306,
+  "zipf_log_C": 10.426117,
+  "zipf_r_squared": 0.948769,
+  "fit_diagnostic": "pass",
+  "n_unique_tokens": 85032,
+  "max_frequency": 29565,
+  "min_frequency": 1,
+  "hapax_legomena_count": 52846,
+  "rare_token_count_lte5": 74938,
+  "zipf_tail_mass_fraction": 0.881292
+}

@@ -1,0 +1,49 @@
+{
+  "_corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "_generated_at": "2026-04-06T22:53:14.273907",
+  "_seed": 42,
+  "source": "HuggingFace Wikipedia dataset (streaming)",
+  "hf_dataset": "wikipedia",
+  "hf_config": "20220301.en",
+  "hf_split": "train",
+  "note": "Corpus built via HuggingFace datasets streaming backend. Raw bz2 XML dump path not used due to Windows bz2 MemoryError. Content source: English Wikipedia. Snapshot: 20220301.en. Ingestion path differs from ingest.py but output format is identical.",
+  "corpus_sha256": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "preprocessing": {
+    "encoding_filter": "utf-8 clean, <1% control chars, <30% non-ASCII",
+    "min_doc_tokens": 50,
+    "max_doc_tokens": 135,
+    "max_doc_tokens_derivation": "empirical_tokenizer_calibration",
+    "calibration": {
+      "encoder_id": "sentence-transformers/all-MiniLM-L6-v2",
+      "encoder_max_subword_tokens": 256,
+      "safety_margin": 20,
+      "sample_size": 500,
+      "p95_subwords_per_whitespace_token": 1.74,
+      "safe_subword_budget": 236,
+      "derived_whitespace_token_cap": 135
+    },
+    "dedup_method": "minhash_greedy",
+    "dedup_threshold": 0.85,
+    "minhash_permutations": 128,
+    "minhash_ngram_size": 5,
+    "tokenizer": "whitespace_split (lexical metrics only)",
+    "case": "preserved",
+    "punctuation": "preserved"
+  },
+  "stats": {
+    "n_documents": 5000,
+    "total_tokens": 597431,
+    "vocab_size": 85032,
+    "type_token_ratio": 0.1423,
+    "mean_doc_tokens": 119.5,
+    "std_doc_tokens": 26.0,
+    "min_doc_tokens": 50,
+    "max_doc_tokens": 135
+  },
+  "n_raw_rejected": {
+    "too_short": 3948,
+    "too_long_truncated": 16027,
+    "encoding_fail": 1,
+    "empty": 0
+  }
+}

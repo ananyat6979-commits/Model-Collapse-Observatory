@@ -1,0 +1,44 @@
+{
+  "model_id": "distilgpt2",
+  "encoder_id": "sentence-transformers/all-MiniLM-L6-v2",
+  "corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "contamination_schedule": "fixed",
+  "contamination_ratio": 0.5,
+  "g0_checkpoint": "G0_checkpoint/",
+  "created_at": "2026-04-11T14:28:30.685203",
+  "notes": "G1 loss recovered from trainer_state.json step 3000 log. G0 loss null by design — G0 is pretrained, not fine-tuned.",
+  "generations": [
+    {
+      "k": 0,
+      "checkpoint": "G0_checkpoint/",
+      "outputs": "G0_outputs/",
+      "training_mix": { "human": 1.0, "synthetic": 0.0 },
+      "loss": null,
+      "note": "Pretrained distilgpt2 — no fine-tuning. Saved before any contamination."
+    },
+    {
+      "k": 1,
+      "checkpoint": "G1_checkpoint/",
+      "outputs": "G1_outputs/",
+      "training_mix": { "human": 0.5, "synthetic_k0": 0.5 },
+      "loss": 2.5996,
+      "note": "Fine-tuned on H + S0 at R=0.5. 3000 steps."
+    },
+    {
+      "k": 2,
+      "checkpoint": "G2_checkpoint/",
+      "outputs": "G2_outputs/",
+      "training_mix": { "human": 0.5, "synthetic_k1": 0.5 },
+      "loss": 1.989214630126953,
+      "note": "Fine-tuned on H + S1 at R=0.5. 3000 steps."
+    },
+    {
+      "k": 3,
+      "checkpoint": "G3_checkpoint/",
+      "outputs": "G3_outputs/",
+      "training_mix": { "human": 0.5, "synthetic_k2": 0.5 },
+      "loss": 1.6592462158203125,
+      "note": "Fine-tuned on H + S2 at R=0.5. 3000 steps."
+    }
+  ]
+}

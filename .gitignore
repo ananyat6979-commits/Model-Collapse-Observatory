@@ -1,18 +1,56 @@
-data/
-phase1_baseline/corpus/documents.jsonl
-phase1_baseline/corpus/manifest.json
-phase1_baseline/measurements/
-phase1_baseline/reference_pack.pkl
-phase1_baseline/reference_pack_manifest.json
-phase1_baseline/reference_pack.pkl
-phase1_baseline/measurements/kde_params.pkl
-phase1_baseline/measurements/pca_transform.pkl
-phase1_baseline/measurements/semantic_embeddings.npy
-phase1_baseline/measurements/semantic_embeddings_pca.npy
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+mco-env/
+venv/
+.venv/
+env/
+
+# Large binary artifacts (on Kaggle, not in git)
+*.bz2
 *.pkl
 *.npy
-*.bz2
-mco-env/
-enwiki-latest-md5sums.txt
+data/
+phase2_simulation/artifacts/
+phase3_measurements/results/
+
+# Model checkpoints (too large for git — live on Kaggle dataset)
+*_checkpoint/
+*.safetensors
+*.bin
+
+# Corpus and output files (tracked via hash in manifest, not content)
+phase1_baseline/corpus/documents.jsonl
+phase1_baseline/measurements/semantic_embeddings.npy
+phase1_baseline/measurements/semantic_embeddings_pca.npy
+
+# Exceptions — these small PKL files ARE committed (they're <1MB)
+!phase1_baseline/reference_pack_manifest.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter/Kaggle
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+kaggle.json
+wandb/
