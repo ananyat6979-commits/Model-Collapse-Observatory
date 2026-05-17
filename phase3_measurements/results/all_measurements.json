@@ -1,0 +1,154 @@
+[
+  {
+    "generation_k": 0,
+    "n_documents": 5000,
+    "timestamp": "2026-05-17T14:22:07",
+    "elapsed_minutes": 0.4,
+    "lexical": {
+      "ttr": 0.112272,
+      "entropy_1gram": 10.542988,
+      "entropy_3gram": 17.107551,
+      "kl_div_1gram": 5.056618,
+      "zipf_alpha": 1.034293,
+      "baseline_entropy_1gram": 11.93064,
+      "entropy_1gram_rel_change": -0.11631
+    },
+    "semantic": {
+      "avg_pairwise_cosine_dist": 0.965587,
+      "intrinsic_dimensionality": 223.0,
+      "semantic_coverage": 0.0,
+      "baseline_avg_cosine_dist": 0.962185,
+      "cosine_dist_rel_change": 0.003535
+    },
+    "tail_mass": {
+      "mean_log_likelihood": 12.364177,
+      "std_log_likelihood": 4.99613,
+      "tail_mass_fraction": 0.1588,
+      "tail_threshold": 7.491402,
+      "baseline_tail_fraction": 0.0282,
+      "tail_fraction_rel_change": 4.631206
+    },
+    "perplexity_inversion": {
+      "ppl_under_g0": 29.006,
+      "ppl_under_gk": 29.006,
+      "perplexity_inversion_ratio": 1.0,
+      "std_ppl_inversion_ratio": 0.0,
+      "n_valid_samples": 200,
+      "ratio_deviation_from_1": 0.0
+    }
+  },
+  {
+    "generation_k": 1,
+    "n_documents": 5000,
+    "timestamp": "2026-05-17T14:22:30",
+    "elapsed_minutes": 0.4,
+    "lexical": {
+      "ttr": 0.077335,
+      "entropy_1gram": 10.449947,
+      "entropy_3gram": 16.827953,
+      "kl_div_1gram": 5.149778,
+      "zipf_alpha": 1.171198,
+      "baseline_entropy_1gram": 11.93064,
+      "entropy_1gram_rel_change": -0.124108
+    },
+    "semantic": {
+      "avg_pairwise_cosine_dist": 0.968814,
+      "intrinsic_dimensionality": 219.0,
+      "semantic_coverage": 0.0,
+      "baseline_avg_cosine_dist": 0.962185,
+      "cosine_dist_rel_change": 0.00689
+    },
+    "tail_mass": {
+      "mean_log_likelihood": 12.016631,
+      "std_log_likelihood": 5.517402,
+      "tail_mass_fraction": 0.209,
+      "tail_threshold": 7.491402,
+      "baseline_tail_fraction": 0.0282,
+      "tail_fraction_rel_change": 6.411348
+    },
+    "perplexity_inversion": {
+      "ppl_under_g0": 8.2166,
+      "ppl_under_gk": 4.3099,
+      "perplexity_inversion_ratio": 1.946737,
+      "std_ppl_inversion_ratio": 1.151842,
+      "n_valid_samples": 200,
+      "ratio_deviation_from_1": 0.946737
+    }
+  },
+  {
+    "generation_k": 2,
+    "n_documents": 5000,
+    "timestamp": "2026-05-17T14:22:57",
+    "elapsed_minutes": 0.4,
+    "lexical": {
+      "ttr": 0.063922,
+      "entropy_1gram": 10.269223,
+      "entropy_3gram": 16.100167,
+      "kl_div_1gram": 5.330542,
+      "zipf_alpha": 1.250064,
+      "baseline_entropy_1gram": 11.93064,
+      "entropy_1gram_rel_change": -0.139256
+    },
+    "semantic": {
+      "avg_pairwise_cosine_dist": 0.964889,
+      "intrinsic_dimensionality": 219.0,
+      "semantic_coverage": 0.0,
+      "baseline_avg_cosine_dist": 0.962185,
+      "cosine_dist_rel_change": 0.00281
+    },
+    "tail_mass": {
+      "mean_log_likelihood": 12.134321,
+      "std_log_likelihood": 5.535174,
+      "tail_mass_fraction": 0.204,
+      "tail_threshold": 7.491402,
+      "baseline_tail_fraction": 0.0282,
+      "tail_fraction_rel_change": 6.234043
+    },
+    "perplexity_inversion": {
+      "ppl_under_g0": 6.7277,
+      "ppl_under_gk": 2.6033,
+      "perplexity_inversion_ratio": 2.609683,
+      "std_ppl_inversion_ratio": 2.290032,
+      "n_valid_samples": 200,
+      "ratio_deviation_from_1": 1.609683
+    }
+  },
+  {
+    "generation_k": 3,
+    "n_documents": 5000,
+    "timestamp": "2026-05-17T14:23:25",
+    "elapsed_minutes": 0.5,
+    "lexical": {
+      "ttr": 0.058467,
+      "entropy_1gram": 10.216995,
+      "entropy_3gram": 15.707672,
+      "kl_div_1gram": 5.382963,
+      "zipf_alpha": 1.29121,
+      "baseline_entropy_1gram": 11.93064,
+      "entropy_1gram_rel_change": -0.143634
+    },
+    "semantic": {
+      "avg_pairwise_cosine_dist": 0.964592,
+      "intrinsic_dimensionality": 220.0,
+      "semantic_coverage": 0.0,
+      "baseline_avg_cosine_dist": 0.962185,
+      "cosine_dist_rel_change": 0.002501
+    },
+    "tail_mass": {
+      "mean_log_likelihood": 12.156086,
+      "std_log_likelihood": 5.587492,
+      "tail_mass_fraction": 0.2042,
+      "tail_threshold": 7.491402,
+      "baseline_tail_fraction": 0.0282,
+      "tail_fraction_rel_change": 6.241135
+    },
+    "perplexity_inversion": {
+      "ppl_under_g0": 5.2697,
+      "ppl_under_gk": 1.9196,
+      "perplexity_inversion_ratio": 2.725384,
+      "std_ppl_inversion_ratio": 2.254219,
+      "n_valid_samples": 200,
+      "ratio_deviation_from_1": 1.725384
+    }
+  }
+]
