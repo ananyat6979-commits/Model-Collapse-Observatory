@@ -1,0 +1,227 @@
+{
+  "signal_analysis": {
+    "ttr": {
+      "relative_changes_pct": [
+        0.0,
+        -31.12,
+        -43.07,
+        -47.92
+      ],
+      "expected_direction": "decreasing",
+      "first_detection_generation": 1,
+      "is_monotonic": true,
+      "total_effect_pct": -47.92,
+      "effect_size_proxy": 2.569,
+      "rate_per_generation_pct": -15.97,
+      "g0_value": 0.112272,
+      "g_final_value": 0.058467
+    },
+    "entropy_1gram": {
+      "relative_changes_pct": [
+        0.0,
+        -0.88,
+        -2.6,
+        -3.09
+      ],
+      "expected_direction": "decreasing",
+      "first_detection_generation": 2,
+      "is_monotonic": true,
+      "total_effect_pct": -3.09,
+      "effect_size_proxy": 2.466,
+      "rate_per_generation_pct": -1.03,
+      "g0_value": 10.542988,
+      "g_final_value": 10.216995
+    },
+    "kl_div_1gram": {
+      "relative_changes_pct": [
+        0.0,
+        1.84,
+        5.42,
+        6.45
+      ],
+      "expected_direction": "increasing",
+      "first_detection_generation": 2,
+      "is_monotonic": true,
+      "total_effect_pct": 6.45,
+      "effect_size_proxy": 2.467,
+      "rate_per_generation_pct": 2.15,
+      "g0_value": 5.056618,
+      "g_final_value": 5.382963
+    },
+    "zipf_alpha": {
+      "relative_changes_pct": [
+        0.0,
+        13.24,
+        20.86,
+        24.84
+      ],
+      "expected_direction": "increasing",
+      "first_detection_generation": 1,
+      "is_monotonic": true,
+      "total_effect_pct": 24.84,
+      "effect_size_proxy": 2.622,
+      "rate_per_generation_pct": 8.28,
+      "g0_value": 1.034293,
+      "g_final_value": 1.29121
+    },
+    "avg_pairwise_cos_dist": {
+      "relative_changes_pct": [
+        0.0,
+        0.33,
+        -0.07,
+        -0.1
+      ],
+      "expected_direction": "decreasing",
+      "first_detection_generation": null,
+      "is_monotonic": false,
+      "total_effect_pct": -0.1,
+      "effect_size_proxy": 0.592,
+      "rate_per_generation_pct": -0.03,
+      "g0_value": 0.965587,
+      "g_final_value": 0.964592
+    },
+    "tail_mass_fraction": {
+      "relative_changes_pct": [
+        0.0,
+        31.61,
+        28.46,
+        28.59
+      ],
+      "expected_direction": "decreasing",
+      "first_detection_generation": null,
+      "is_monotonic": false,
+      "total_effect_pct": 28.59,
+      "effect_size_proxy": 2.223,
+      "rate_per_generation_pct": 9.53,
+      "g0_value": 0.1588,
+      "g_final_value": 0.2042
+    },
+    "ppl_inversion_ratio": {
+      "relative_changes_pct": [
+        0.0,
+        94.67,
+        160.97,
+        172.54
+      ],
+      "expected_direction": "increasing",
+      "first_detection_generation": 1,
+      "is_monotonic": true,
+      "total_effect_pct": 172.54,
+      "effect_size_proxy": 2.516,
+      "rate_per_generation_pct": 57.51,
+      "g0_value": 1.0,
+      "g_final_value": 2.725384
+    }
+  },
+  "signal_series": {
+    "ttr": [
+      0.112272,
+      0.077335,
+      0.063922,
+      0.058467
+    ],
+    "entropy_1gram": [
+      10.542988,
+      10.449947,
+      10.269223,
+      10.216995
+    ],
+    "kl_div_1gram": [
+      5.056618,
+      5.149778,
+      5.330542,
+      5.382963
+    ],
+    "zipf_alpha": [
+      1.034293,
+      1.171198,
+      1.250064,
+      1.29121
+    ],
+    "avg_pairwise_cos_dist": [
+      0.965587,
+      0.968814,
+      0.964889,
+      0.964592
+    ],
+    "tail_mass_fraction": [
+      0.1588,
+      0.209,
+      0.204,
+      0.2042
+    ],
+    "ppl_inversion_ratio": [
+      1.0,
+      1.946737,
+      2.609683,
+      2.725384
+    ]
+  },
+  "hypothesis_results": {
+    "H1": false,
+    "H2": false,
+    "H3": true,
+    "tail_detection": 999,
+    "semantic_detection": 999,
+    "ppl_detection": 1,
+    "lexical_detection": 2
+  },
+  "signal_detection_order": [
+    {
+      "rank": 1,
+      "signal": "zipf_alpha",
+      "first_detection_k": 1,
+      "effect_size": 2.622,
+      "total_effect_pct": 24.84,
+      "monotonic": true
+    },
+    {
+      "rank": 2,
+      "signal": "ttr",
+      "first_detection_k": 1,
+      "effect_size": 2.569,
+      "total_effect_pct": -47.92,
+      "monotonic": true
+    },
+    {
+      "rank": 3,
+      "signal": "ppl_inversion_ratio",
+      "first_detection_k": 1,
+      "effect_size": 2.516,
+      "total_effect_pct": 172.54,
+      "monotonic": true
+    },
+    {
+      "rank": 4,
+      "signal": "kl_div_1gram",
+      "first_detection_k": 2,
+      "effect_size": 2.467,
+      "total_effect_pct": 6.45,
+      "monotonic": true
+    },
+    {
+      "rank": 5,
+      "signal": "entropy_1gram",
+      "first_detection_k": 2,
+      "effect_size": 2.466,
+      "total_effect_pct": -3.09,
+      "monotonic": true
+    },
+    {
+      "rank": 6,
+      "signal": "tail_mass_fraction",
+      "first_detection_k": null,
+      "effect_size": 2.223,
+      "total_effect_pct": 28.59,
+      "monotonic": false
+    },
+    {
+      "rank": 7,
+      "signal": "avg_pairwise_cos_dist",
+      "first_detection_k": null,
+      "effect_size": 0.592,
+      "total_effect_pct": -0.1,
+      "monotonic": false
+    }
+  ]
+}
