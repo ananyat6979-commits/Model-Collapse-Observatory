@@ -5029,8 +5029,7 @@
         22.237892,
         22.246509,
         12.405673
-      ],
-      "_note": "G0-relative KDE reference"
+      ]
     },
     "perplexity_inversion": {
       "ppl_under_g0": 29.006,
@@ -5644,8 +5643,7 @@
         22.1959,
         102.3887,
         10.2438
-      ],
-      "_note": "per-sample ratios stored"
+      ]
     }
   },
   {
@@ -10678,8 +10676,7 @@
         20.933777,
         14.770819,
         14.040287
-      ],
-      "_note": "G0-relative KDE reference"
+      ]
     },
     "perplexity_inversion": {
       "ppl_under_g0": 8.2166,
@@ -11293,8 +11290,7 @@
         2.2357,
         1.911,
         5.3065
-      ],
-      "_note": "per-sample ratios stored"
+      ]
     }
   },
   {
@@ -16327,8 +16323,7 @@
         18.680253,
         15.501171,
         16.787172
-      ],
-      "_note": "G0-relative KDE reference"
+      ]
     },
     "perplexity_inversion": {
       "ppl_under_g0": 6.7277,
@@ -16942,8 +16937,7 @@
         3.5764,
         2.1636,
         3.4398
-      ],
-      "_note": "per-sample ratios stored"
+      ]
     }
   },
   {
@@ -21976,8 +21970,7 @@
         19.283136,
         15.501171,
         17.364343
-      ],
-      "_note": "G0-relative KDE reference"
+      ]
     },
     "perplexity_inversion": {
       "ppl_under_g0": 5.2697,
@@ -22591,8 +22584,7 @@
         3.4781,
         1.42,
         1.8012
-      ],
-      "_note": "per-sample ratios stored"
+      ]
     }
   }
 ]

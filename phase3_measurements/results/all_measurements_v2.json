@@ -2,8 +2,8 @@
   {
     "generation_k": 0,
     "n_documents": 5000,
-    "timestamp": "2026-05-18T14:25:02",
-    "elapsed_minutes": 0.5,
+    "timestamp": "2026-05-20T06:39:48",
+    "elapsed_minutes": 0.4,
     "perplexity_inversion_fixed": {
       "ppl_under_g0": 29.006,
       "ppl_under_gk": 29.006,
@@ -5633,8 +5633,8 @@
   {
     "generation_k": 1,
     "n_documents": 5000,
-    "timestamp": "2026-05-18T14:25:34",
-    "elapsed_minutes": 0.5,
+    "timestamp": "2026-05-20T06:40:08",
+    "elapsed_minutes": 0.3,
     "perplexity_inversion_fixed": {
       "ppl_under_g0": 8.2166,
       "ppl_under_gk": 4.3099,
@@ -11264,8 +11264,8 @@
   {
     "generation_k": 2,
     "n_documents": 5000,
-    "timestamp": "2026-05-18T14:26:12",
-    "elapsed_minutes": 0.6,
+    "timestamp": "2026-05-20T06:40:28",
+    "elapsed_minutes": 0.3,
     "perplexity_inversion_fixed": {
       "ppl_under_g0": 6.7277,
       "ppl_under_gk": 2.6033,
@@ -16895,8 +16895,8 @@
   {
     "generation_k": 3,
     "n_documents": 5000,
-    "timestamp": "2026-05-18T14:26:51",
-    "elapsed_minutes": 0.7,
+    "timestamp": "2026-05-20T06:40:50",
+    "elapsed_minutes": 0.4,
     "perplexity_inversion_fixed": {
       "ppl_under_g0": 5.2697,
       "ppl_under_gk": 1.9196,
