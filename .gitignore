@@ -21,7 +21,8 @@ env/
 *.npy
 data/
 phase2_simulation/artifacts/
-phase3_measurements/results/
+phase3_measurements/results/*.csv
+phase3_measurements/results/*.parquet
 
 # Model checkpoints (too large for git — live on Kaggle dataset)
 *_checkpoint/
