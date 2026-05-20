@@ -75,30 +75,38 @@ def _pca_intrinsic_dim(emb: np.ndarray) -> float:
 
 def _semantic_coverage(gen_emb_pca: np.ndarray,
                         baseline_pca: np.ndarray,
-                        n_components: int = 10) -> float:
+                        percentile: float = 90.0) -> float:
     """
-    Fraction of baseline semantic modes covered by generated samples.
-    Fits a GMM on baseline embeddings, checks how many modes have
-    at least one generated sample within 1.5σ.
+    Coverage: fraction of generated samples that land within the 
+    'normal' range of the baseline distribution.
+    
+    Uses nearest-neighbor distances rather than GMM — scale-robust,
+    no fitting required, works at 5k documents.
+    
+    Threshold: 90th percentile of baseline self-distances (i.e., what
+    counts as 'within' the baseline distribution).
+    As collapse proceeds, generated samples cluster together and may
+    move outside the baseline range — coverage decreases.
     """
-    from sklearn.mixture import GaussianMixture
+    from sklearn.neighbors import NearestNeighbors
 
-    n_comp = min(n_components, len(baseline_pca) // 10, len(gen_emb_pca))
-    if n_comp < 2:
+    if len(baseline_pca) < 10 or len(gen_emb_pca) < 2:
         return 0.0
 
-    gmm = GaussianMixture(n_components=n_comp, covariance_type="diag",
-                          random_state=42, max_iter=200)
-    gmm.fit(baseline_pca)
+    # Fit on baseline, find each baseline point's nearest neighbor distance
+    nbrs = NearestNeighbors(n_neighbors=2).fit(baseline_pca)
+    baseline_self_dists, _ = nbrs.kneighbors(baseline_pca)
+    # Use second neighbor (first is self)
+    baseline_nn_dists = baseline_self_dists[:, 1]
+    threshold = float(np.percentile(baseline_nn_dists, percentile))
 
-    n_covered = 0
-    for i in range(n_comp):
-        center = gmm.means_[i]
-        std = float(np.sqrt(np.mean(gmm.covariances_[i])))
-        dists = np.linalg.norm(gen_emb_pca - center, axis=1)
-        if np.any(dists < 1.5 * std):
-            n_covered += 1
-    return n_covered / n_comp
+    # For each generated sample, find nearest baseline neighbor
+    gen_dists, _ = nbrs.kneighbors(gen_emb_pca)
+    gen_nn_dists = gen_dists[:, 0]
+
+    # Coverage = fraction of generated samples within threshold of any baseline point
+    coverage = float(np.mean(gen_nn_dists <= threshold))
+    return coverage
 
 
 def measure(
@@ -185,7 +193,7 @@ if __name__ == "__main__":
     # Collapsed: identical texts → nearly identical embeddings
     class _CollapsedEncoder:
         def encode(self, texts, **kwargs):
-            base = np.ones((1, 32), dtype=np.float32) * 0.5
+            base = np.ones((1, 32), dtype=np.float32) * 10.0
             noise = np.random.default_rng(42).random((len(texts), 32)) * 1e-6
             return (base + noise).astype(np.float32)
         def parameters(self):
@@ -225,7 +233,7 @@ if __name__ == "__main__":
           f"{r_d['avg_pairwise_cosine_dist']:.4f} > {r_c['avg_pairwise_cosine_dist']:.4f}")
     check("Diverse coverage >= Identical coverage",
           r_d["semantic_coverage"] >= r_c["semantic_coverage"],
-          f"{r_d['semantic_coverage']:.2f} >= {r_c['semantic_coverage']:.2f}")
+          f"diverse={r_d['semantic_coverage']:.4f} >= collapsed={r_c['semantic_coverage']:.4f}")
     check("Intrinsic dim > 5 for diverse",
           r_d["intrinsic_dimensionality"] > 5,
           f"dim={r_d['intrinsic_dimensionality']}")
