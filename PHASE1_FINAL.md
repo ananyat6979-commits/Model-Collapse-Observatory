@@ -1,4 +1,4 @@
-# Phase 1 — Final Assessment and Run Instructions
+# Phase 1: Final Assessment and Run Instructions
 
 ## Verdict
 
@@ -14,7 +14,7 @@ why there is nothing more to iterate on, and exactly what to run.
 Previous behavior:
 ```python
 except ImportError:
-    log.warning("transformers not installed — skipping tokenizer calibration...")
+    log.warning("transformers not installed: skipping tokenizer calibration...")
     return {"calibration": "skipped_no_transformers", "recommended_max_tokens": 200}
 ```
 
@@ -32,8 +32,8 @@ except ImportError:
 The soft fallback was poison for a locked baseline. It would let the pipeline
 produce a corpus whose manifest says "empirical_tokenizer_calibration" but whose
 actual length cap was an unverified constant. Documents could be silently
-truncated by the encoder. The semantic baseline — including the tail mass
-measurement — would be built on the first ~50–70 words of each article instead
+truncated by the encoder. The semantic baseline, including the tail mass
+measurement, would be built on the first ~50–70 words of each article instead
 of the full document. The primary collapse signal would be measuring the wrong
 distribution from the start.
 
@@ -42,10 +42,10 @@ before the corpus is built. This is the correct behavior for a locked baseline.
 
 ---
 
-## What Was Cleaned Up (Not Bugs — Polish)
+## What Was Cleaned Up (Not Bugs, Polish)
 
 The `build_corpus` Stage 0 block was simplified. The old code checked for
-`"derived_whitespace_token_cap" in calibration_result` — a guard that existed
+`"derived_whitespace_token_cap" in calibration_result`: a guard that existed
 because calibration could silently return a fallback dict. Since calibration now
 raises on failure, the guard is gone. The code directly reads
 `calibration_result["derived_whitespace_token_cap"]`.
@@ -64,7 +64,7 @@ tries to use the corpus with a new pipeline expecting calibration metadata.
 
 **MinHash seed reuse.** Every review flagged this. It is correct behavior.
 MinHash requires identical hash functions applied to every document. The same
-seed produces the same `(a, b)` parameters for each permutation — that is the
+seed produces the same `(a, b)` parameters for each permutation: that is the
 definition of valid MinHash. See the docstring in `minhash_signature`.
 
 **Calibration sample bias from PRELIMINARY_CAP=500.** The calibration samples
@@ -78,7 +78,7 @@ comment block and in the log warning. It is not blocking.
 This was correctly identified in an earlier session as preventing KDE
 self-overfitting from biasing the tail threshold upward. The split is correct.
 The previous review's concern about "fitting only 1,200 points" is resolved by
-the compound subsampling fix — the KDE now receives all 5,000 PCA-projected
+the compound subsampling fix: the KDE now receives all 5,000 PCA-projected
 embeddings, 60/40 split → 3,000 train / 2,000 threshold evaluation.
 
 **`wikiextractor` not used.** `iterparse` with `elem.clear()` is the standard
@@ -97,7 +97,7 @@ documented constraints, not bugs.
 3. Only R=0.5 fixed contamination schedule. Detection order may differ at other ratios.
 4. k=3 generations is a short simulation chain.
 5. Perplexity inversion signal is novel and unvalidated by prior work.
-6. Calibration samples truncated at 500 tokens — p95 ratio is slightly optimistic.
+6. Calibration samples truncated at 500 tokens, p95 ratio is slightly optimistic.
    Safety margin compensates, but ~1% of documents may see mild encoder truncation.
 
 These are the honest limitations of a controlled small-scale study.
@@ -219,20 +219,20 @@ Then begin Phase 2 on Kaggle. Upload `reference_pack.pkl` and
 
 Every hostile review across this session series identified the following issues:
 
-1. ✅ Namespace filter — fixed (using `<ns>` XML element)
-2. ✅ Hard-fail on underfilled corpus — fixed (before and after dedup)
-3. ✅ BookCorpus provenance claim — removed from manifest, SCOPE.md, config.yaml
-4. ✅ `html.unescape()` + NFKC normalization — added in correct order
-5. ✅ Non-ASCII sentinel tests — 21 checks, all passing
-6. ✅ KDE train/eval split — preventing threshold bias from KDE self-overfitting
-7. ✅ Compound subsampling — all PCA embeddings saved, not 2,000 of 5,000
-8. ✅ DistilGPT-2 weight hash — computed and stored in ppl_baseline.json
-9. ✅ GMM covariance type — changed to diagonal for valid Euclidean threshold
-10. ✅ `compute_semantic_coverage` moved to Phase 3 — eliminated cross-phase import
-11. ✅ Calibration sample from candidate pool — not dump front matter
-12. ✅ Calibration hard-fail on missing `transformers` — no more silent fallback
-13. ✅ KL distributions inlined in pack — no filesystem path references
-14. ✅ Pack verification tied to corpus manifest count — not hard-coded 1000
+1. ✅ Namespace filter : fixed (using `<ns>` XML element)
+2. ✅ Hard-fail on underfilled corpus : fixed (before and after dedup)
+3. ✅ BookCorpus provenance claim : removed from manifest, SCOPE.md, config.yaml
+4. ✅ `html.unescape()` + NFKC normalization : added in correct order
+5. ✅ Non-ASCII sentinel tests : 21 checks, all passing
+6. ✅ KDE train/eval split : preventing threshold bias from KDE self-overfitting
+7. ✅ Compound subsampling : all PCA embeddings saved, not 2,000 of 5,000
+8. ✅ DistilGPT-2 weight hash : computed and stored in ppl_baseline.json
+9. ✅ GMM covariance type : changed to diagonal for valid Euclidean threshold
+10. ✅ `compute_semantic_coverage` moved to Phase 3 : eliminated cross-phase import
+11. ✅ Calibration sample from candidate pool : not dump front matter
+12. ✅ Calibration hard-fail on missing `transformers` : no more silent fallback
+13. ✅ KL distributions inlined in pack : no filesystem path references
+14. ✅ Pack verification tied to corpus manifest count : not hard-coded 1000
 
 The code has no remaining known issues. The only thing that remains
 is operational: download the dump, run the pipeline, validate the numbers.
