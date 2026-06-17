@@ -69,7 +69,7 @@ def load_wikipedia_holdout(n=N_SAMPLES, seed=SEED):
     Expected composite index: < 0.20
     """
     docs = []
-    with open(CORPUS_FILE) as f:
+    with open(CORPUS_FILE, encoding="utf-8") as f:
         all_docs = [json.loads(line)["text"] for line in f]
 
     rng = np.random.default_rng(seed + 999)  # different seed from training split
