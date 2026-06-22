@@ -213,3 +213,123 @@ in density measurements, not due to theoretical failure.
 **Next step:**
 Fix tail mass to use G0-relative density. Run Phase 5 with TinyStories pilot.
 Consider also running a corrected Phase 3 measurement pass with fixed tail mass.
+
+---
+
+## EXP-006: Phase 2 Generation at R=0.25 (Lower Contamination Condition)
+**Phase:** 2 (second experimental condition)
+**Date:** 2026-05-19
+**Hypothesis:** At R=0.25 (75% human, 25% synthetic), collapse should proceed
+more slowly than at R=0.5. Training loss should be higher at every generation
+(model fits the contaminated distribution less tightly). PPL inversion signal
+should be weaker at every k.
+**Setup:**
+- Model: distilgpt2 (82M), same G0 checkpoint as R=0.5 experiment
+- Contamination ratio: R=0.25 (fixed)
+- G0 outputs (S0) reused from R=0.5 experiment — same seed, same model
+- Training: 3000 steps per generation, same hyperparameters as R=0.5
+- Seed: 42
+
+**Training loss progression:**
+
+| Generation | R=0.5 loss | R=0.25 loss | Difference |
+|---|---|---|---|
+| G1 | 2.5996 | 2.6995 | +0.100 |
+| G2 | 1.9892 | 2.2302 | +0.241 |
+| G3 | 1.6592 | 1.9764 | +0.317 |
+
+Loss gap widens with each generation: R=0.25 model overfits less to the
+contaminated distribution at each step. Consistent with hypothesis.
+
+**PPL inversion results (UNEXPECTED):**
+
+| Gen | R=0.5 ratio | R=0.25 ratio | Difference |
+|---|---|---|---|
+| G0 | 1.000 | 1.000 | 0.000 |
+| G1 | 1.947 | 2.341 | -0.395 |
+| G2 | 2.610 | 3.260 | -0.651 |
+| G3 | 2.725 | 3.726 | -1.001 |
+
+Mann-Whitney G3 R=0.5 vs R=0.25: p<0.001
+
+**Hypothesis supported:** PARTIALLY
+- Training loss: SUPPORTED, R=0.25 shows consistently higher loss (weaker overfit)
+- PPL inversion direction: FALSIFIED, R=0.25 shows HIGHER ratio, not lower
+
+**Root cause of PPL reversal (domain gap confound):**
+G0 reference model (DistilGPT-2) was trained on WebText (Reddit links).
+Training corpus is English Wikipedia. These are different distributions.
+
+At R=0.25 (75% Wikipedia in training mix): fine-tuned model generates more
+Wikipedia-like text. G0 (WebText) finds Wikipedia-style outputs MORE surprising,
+PPL_G0 increases, ratio is higher.
+
+At R=0.5 (50% Wikipedia): model generates more mixed outputs. Some synthetic
+content resembles WebText (G0's training domain), reducing PPL_G0, reducing ratio.
+
+The PPL inversion ratio measures distributional distance from G0's training
+distribution, not collapse severity directly. Domain alignment between reference
+model and training corpus is required for unconfounded collapse measurement.
+
+**Next step:** Document domain alignment requirement as a hard constraint in
+SKILL.md and warning_card.md. For future work: use G0 trained on the same domain
+as the training corpus (e.g., a Wikipedia-trained model as reference for
+Wikipedia experiments).
+
+---
+
+## EXP-007: Phase 5 Contamination Index: Three Real Datasets
+**Phase:** 5
+**Date:** 2026-05-20
+**Hypothesis:** The MCO measurement framework will produce high composite index
+scores for synthetic datasets and near-zero scores for human datasets.
+Specifically: TinyStories (100% GPT-4) > 0.5, Wikipedia holdout < 0.2,
+C4 validation 0.15-0.35, Pile-CC 0.20-0.45.
+
+**Results:**
+
+| Dataset | TTR | KL | PPL ratio | Composite | Ground truth |
+|---|---|---|---|---|---|
+| Wikipedia holdout | 0.227 | 4.15 | 0.905 | 0.026 | Known human |
+| C4 validation | 0.185 | 4.03 | 0.631 | 0.023 | Human web |
+| Pile-CC | 0.221 | 3.50 | 0.834 | 0.016 | Human web |
+| TinyStories | 0.061 | 6.14 | 2.143 | 0.667 | 100% GPT-4 |
+
+**Hypothesis supported:** PARTIALLY
+- TinyStories: SUPPORTED — composite 0.667 > 0.5 ✓
+- Wikipedia holdout: SUPPORTED — composite 0.026 < 0.2 ✓ (negative control passes)
+- C4 and Pile-CC: FALSIFIED — both score near zero, not 0.15-0.45 as predicted
+
+**Root cause of C4 and Pile-CC scoring near zero:**
+The composite index is calibrated against DistilGPT-2 output space.
+Human web corpora (C4, Pile-CC) have higher TTR (0.18-0.22) and more diverse
+vocabulary than DistilGPT-2 outputs (G0 TTR=0.112, G3 TTR=0.058).
+
+The entire lexical calibration range (G0 TTR to G3 TTR) lies below the
+diversity level of real web text. C4 and Pile-CC are MORE diverse than the
+clean-generation anchor, so they floor at zero on the lexical component.
+
+PPL ratio for C4 (0.63) and Pile-CC (0.83) are both below 1.0, G0 finds
+web text HARDER to predict than Wikipedia, consistent with web text being more
+diverse and out-of-distribution for a WebText-trained model. Neither dataset
+registers as synthetic on the PPL component.
+
+**Key finding: framework scope:**
+The MCO framework detects distributional collapse in the DistilGPT-2 output
+space. It correctly flags text that is MORE collapsed than DistilGPT-2 outputs
+(TinyStories: simple GPT-4 children's stories). It cannot detect text that is
+more diverse than DistilGPT-2 outputs (C4, Pile-CC: real web text).
+
+**What "contamination" the framework measures:**
+Not "fraction of synthetic documents" but "how close is this text to the
+collapsed distribution of DistilGPT-2 at k=3, R=0.5."
+
+**To extend to web-domain datasets:**
+Replace Phase 1 baseline corpus with C4 or Common Crawl samples.
+Re-fit all measurements (KDE, PCA, KL distributions) on web-domain text.
+Re-calibrate composite index against web-domain collapse simulation.
+This is a 2-3 month project and is documented as future work.
+
+**Next step:** Phase 5 is complete as a pilot. Document calibration limitation
+in INDEX_SCHEMA.md and warning_card.md. Mark Phase 5 signed off.
+The measurement framework is validated for its stated scope.

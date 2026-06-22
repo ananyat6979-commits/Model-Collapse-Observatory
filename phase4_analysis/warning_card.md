@@ -1,5 +1,5 @@
 # Early Warning Card
-## Model Collapse Observatory — Phase 4 Analysis
+## Model Collapse Observatory: Phase 4 Analysis
 
 **Model:** DistilGPT-2 (82M parameters)  
 **Corpus:** English Wikipedia, HuggingFace 20220301.en, 5,000 documents, ~600k tokens  
@@ -20,7 +20,7 @@
 | 6 | Tail Mass Fraction | not detected | 2.22 | +28.6%* | ✗ |
 | 7 | Semantic Cosine Distance | not detected | 0.60 | -0.1% | ✗ |
 
-*Tail mass moved in wrong direction — see caveats.
+*Tail mass moved in wrong direction: see caveats.
 
 ---
 
@@ -37,15 +37,15 @@ generation you should expect:**
   substantially more repetitive after a single contaminated generation.
 
 - **Zipf alpha increases ~13%** (1.03 → 1.17). Word frequency distribution
-  concentrates more heavily on common words — rare words disappear from output.
+  concentrates more heavily on common words: rare words disappear from output.
 
 After three contaminated generations at R=0.5:
 
-- **PPL inversion ratio ≈ 2.73** — generating model is >2.7x more confident
+- **PPL inversion ratio ≈ 2.73**: generating model is >2.7x more confident
   about its outputs than the human-trained reference model.
-- **TTR drops ~48%** — the model generates from roughly half the vocabulary
+- **TTR drops ~48%**: the model generates from roughly half the vocabulary
   it used at generation 0.
-- **1-gram entropy decreases 3.1%** — modest but consistent.
+- **1-gram entropy decreases 3.1%**: modest but consistent.
 
 ---
 
@@ -69,14 +69,14 @@ indicates severe concentration of generated distribution.
 
 ## Novel Finding: Perplexity Inversion as Primary Collapse Signal
 
-The perplexity inversion signal — PPL(G0, text) / PPL(Gk, text) — was not
+The perplexity inversion signal : PPL(G0, text) / PPL(Gk, text), was not
 established as a collapse detector in prior literature. This study provides
 empirical evidence that it is:
 
-1. **Earliest-firing** — detects at k=1, same generation as lexical signals
-2. **Largest magnitude** — 172.5% total change vs 47.9% for best lexical signal
-3. **Perfectly monotonic** — no reversals across k=0,1,2,3
-4. **Mechanistically interpretable** — directly measures model overconfidence
+1. **Earliest-firing**, detects at k=1, same generation as lexical signals
+2. **Largest magnitude**, 172.5% total change vs 47.9% for best lexical signal
+3. **Perfectly monotonic**, no reversals across k=0,1,2,3
+4. **Mechanistically interpretable**, directly measures model overconfidence
 
 The mechanism: as collapse proceeds, the model generates text that concentrates
 on its highest-probability regions. PPL_Gk decreases because the model finds its
@@ -84,19 +84,19 @@ own outputs trivially predictable. PPL_G0 also decreases (the human baseline mod
 can produce this text) but more slowly — the ratio increases monotonically.
 
 At k=3: ppl_under_gk = 1.92, ppl_under_g0 = 5.27. The collapsed model generates
-text with effective PPL of 2 — barely above a degenerate distribution.
+text with effective PPL of 2, barely above a degenerate distribution.
 
 ---
 
 ## ZL-IRL Boundary Positioning
 
-These signals are effective within the **stochastic contamination regime** —
+These signals are effective within the **stochastic contamination regime**,
 partial synthetic data mixing at fixed ratio. This study operates in the
 pre-boundary regime where early warning is possible.
 
 Under deterministic representation truncation (the ZL-IRL boundary condition),
 early warning becomes structurally impossible. The signals characterized here
-detect the *approach* to that boundary — they are not valid at or beyond it.
+detect the *approach* to that boundary, they are not valid at or beyond it.
 
 *Reference: Zero-Lead-Time Irreversible Representation Loss (ZL-IRL),
 ananyat6979-commits/Zero-Lead-Time-Irreversible-Representation-Loss.*
