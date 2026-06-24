@@ -67,24 +67,40 @@ indicates severe concentration of generated distribution.
 
 ---
 
-## Novel Finding: Perplexity Inversion as Primary Collapse Signal
+## Primary Collapse Signal: ppl_Gk (Revised)
 
-The perplexity inversion signal : PPL(G0, text) / PPL(Gk, text), was not
-established as a collapse detector in prior literature. This study provides
-empirical evidence that it is:
+Initial analysis proposed the PPL inversion ratio (ppl_ref / ppl_Gk) as the
+primary signal. After the domain-matched reference experiment (Sprint 2), the
+correct recommendation is:
 
-1. **Earliest-firing**, detects at k=1, same generation as lexical signals
-2. **Largest magnitude**, 172.5% total change vs 47.9% for best lexical signal
-3. **Perfectly monotonic**, no reversals across k=0,1,2,3
-4. **Mechanistically interpretable**, directly measures model overconfidence
+**Use ppl_Gk, the generating model's perplexity on its own outputs, as the
+primary collapse signal.**
 
-The mechanism: as collapse proceeds, the model generates text that concentrates
-on its highest-probability regions. PPL_Gk decreases because the model finds its
-own outputs trivially predictable. PPL_G0 also decreases (the human baseline model
-can produce this text) but more slowly — the ratio increases monotonically.
+ppl_Gk values across conditions:
 
-At k=3: ppl_under_gk = 1.92, ppl_under_g0 = 5.27. The collapsed model generates
-text with effective PPL of 2, barely above a degenerate distribution.
+| Gen | R=0.5 ppl_Gk | R=0.25 ppl_Gk | Correct order |
+|---|---|---|---|
+| G0 | 29.01 | 29.01 | baseline |
+| G1 | 4.31 | 4.89 | ✓ R=0.5 lower |
+| G2 | 2.60 | 3.23 | ✓ R=0.5 lower |
+| G3 | 1.92 | 2.65 | ✓ R=0.5 lower |
+
+ppl_Gk correctly orders contamination severity at every generation.
+R=0.5 produces more collapsed models (lower ppl_Gk) than R=0.25, as expected.
+
+**Why the ratio fails across conditions:**
+As collapse deepens, the generating model concentrates on high-frequency patterns
+that are predictable to any model including the reference. ppl_ref drops alongside
+ppl_Gk. The ratio (ppl_ref / ppl_Gk) does not increase monotonically with
+contamination severity because both components decrease.
+
+Within a single condition (fixed R, increasing k), the ratio is still a valid
+diagnostic. It tracks the within-condition progression correctly. The problem
+arises only when comparing across contamination ratios.
+
+**Actionable threshold (revised):**
+Monitor ppl_Gk directly. Values below 5.0 indicate significant collapse has begun.
+Values below 2.5 indicate severe concentration of the generation distribution.
 
 ---
 
