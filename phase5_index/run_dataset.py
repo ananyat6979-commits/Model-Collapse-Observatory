@@ -1,10 +1,10 @@
 """
-MCO Phase 5 — Real Dataset Contamination Index
+MCO Phase 5: Real Dataset Contamination Index
 ===============================================
 Scores multiple real training datasets using the MCO measurement framework.
 
 Datasets:
-  1. Wikipedia held-out (negative control — known human)
+  1. Wikipedia held-out (negative control, known human)
   2. C4 validation split (web-crawled, expected low-moderate contamination)
   3. The Pile Common Crawl subset (expected moderate contamination)
 
@@ -40,14 +40,14 @@ SEED      = 42
 N_SAMPLES = 1000   # documents per dataset
 PPL_SAMPLES = 200  # PPL subsample
 
-# Effect sizes from Phase 4 Mann-Whitney tests — used for principled weighting
+# Effect sizes from Phase 4 Mann-Whitney tests, used for principled weighting
 # Higher effect_r = more reliable signal = higher weight in composite index
 SIGNAL_WEIGHTS = {
     "lexical_ttr":        0.865,  # effect_r from G0 vs G1 Mann-Whitney
     "lexical_kl":         0.865,
     "ppl_predictability": 0.865,
-    "semantic_coverage":  0.300,  # lower weight — unreliable signal at this scale
-    # tail mass excluded — domain mismatch makes it unreliable for real datasets
+    "semantic_coverage":  0.300,  # lower weight: unreliable signal at this scale
+    # tail mass excluded, domain mismatch makes it unreliable for real datasets
 }
 WEIGHT_SUM = sum(SIGNAL_WEIGHTS.values())
 
@@ -65,7 +65,7 @@ CALIBRATION = {
 def load_wikipedia_holdout(n=N_SAMPLES, seed=SEED):
     """
     20% held-out Wikipedia documents from Phase 1 corpus.
-    This is the NEGATIVE CONTROL — known human text.
+    This is the NEGATIVE CONTROL, known human text.
     Expected composite index: < 0.20
     """
     docs = []
@@ -84,14 +84,14 @@ def load_wikipedia_holdout(n=N_SAMPLES, seed=SEED):
     print(f"  Sample: {docs[0][:120]}...")
     return docs, {
         "dataset_name": "Wikipedia Phase 1 holdout (20%)",
-        "ground_truth": "known human — negative control",
+        "ground_truth": "known human, negative control",
         "expected_composite": "< 0.20",
     }
 
 
 def load_c4(n=N_SAMPLES, seed=SEED):
     """
-    C4 validation split — web-crawled, filtered Common Crawl.
+    C4 validation split: web-crawled, filtered Common Crawl.
     Expected composite index: 0.15-0.35 (moderate web contamination).
     """
     from datasets import load_dataset
@@ -112,14 +112,15 @@ def load_c4(n=N_SAMPLES, seed=SEED):
         "dataset_name": "allenai/c4",
         "dataset_version": "en",
         "dataset_source_url": "https://huggingface.co/datasets/allenai/c4",
-        "ground_truth": "unknown — web crawl with quality filtering",
-        "expected_composite": "0.15-0.35",
+        "ground_truth": "unknown, web crawl with quality filtering",
+        "expected_composite": "~0.0 (floors at zero, web TTR exceeds calibration range)",
+        "calibration_note": "C4 TTR ~0.18 exceeds G0 anchor 0.112. Score near 0 means more diverse than calibration range, not confirmed human.",
     }
 
 
 def load_pile_cc(n=N_SAMPLES, seed=SEED):
     """
-    The Pile — Common Crawl subset (Pile-CC).
+    The Pile: Common Crawl subset (Pile-CC).
     Most internet-representative pretraining data.
     Expected composite index: 0.20-0.45.
     """
@@ -148,8 +149,9 @@ def load_pile_cc(n=N_SAMPLES, seed=SEED):
     return docs, {
         "dataset_name": "EleutherAI/pile (Common Crawl subset)",
         "dataset_source_url": "https://huggingface.co/datasets/EleutherAI/pile",
-        "ground_truth": "unknown — internet crawl, expected partial synthetic contamination",
-        "expected_composite": "0.20-0.45",
+        "ground_truth": "unknown, internet crawl, expected partial synthetic contamination",
+        "expected_composite": "~0.0 (floors at zero, web TTR exceeds calibration range)",
+        "calibration_note": "Pile-CC TTR ~0.20 exceeds G0 anchor 0.112. Score near 0 means more diverse than calibration range.",
     }
 
 
@@ -221,7 +223,7 @@ def measure_semantic(docs, pack, encoder):
     upper = np.triu_indices(len(normed), k=1)
     cos_dist = float(np.mean(1 - sim[upper]))
 
-    # NN coverage (Fix 3 — scale-robust)
+    # NN coverage (Fix 3, scale-robust)
     nbrs = NearestNeighbors(n_neighbors=2).fit(baseline_pca)
     baseline_self_dists, _ = nbrs.kneighbors(baseline_pca)
     threshold = float(np.percentile(baseline_self_dists[:, 1], 90))
@@ -291,7 +293,7 @@ def compute_composite(lex, sem, ppl_result):
     Weights derived from Phase 4 Mann-Whitney effect sizes.
     Range: 0 (clean human text) to 1 (maximally collapsed synthetic).
 
-    Tail mass excluded — domain-dependent, unreliable for cross-domain application.
+    Tail mass excluded, domain-dependent, unreliable for cross-domain application.
     """
     c = CALIBRATION
     component_scores = {}
@@ -351,8 +353,12 @@ def estimate_synthetic_fraction(composite):
         "ci_lower_95": round(max(0.0, point - ci_width), 3),
         "ci_upper_95": round(min(1.0, point + ci_width), 3),
         "estimation_method": "calibrated_linear_interpolation_phase3_distilgpt2_r05",
-        "note": "Rough estimate. True synthetic fraction is unknown for real datasets. "
-                "Point estimate is the composite index value itself, not a calibrated probability.",
+        "note": (
+            "NOT a calibrated probability. This is the composite index score: how far "
+            "the dataset's statistics fall toward the DistilGPT-2 collapsed distribution. "
+            "Score=0.0 means 'at least as diverse as DistilGPT-2 outputs', NOT 'confirmed human'. "
+            "Score=1.0 means 'as collapsed as G3 at R=0.5', NOT '100% synthetic'."
+        ),
     }
 
 
@@ -435,7 +441,7 @@ def run(dataset_name: str):
         },
         "component_scores": component_scores,
         "signal_weights_used": SIGNAL_WEIGHTS,
-        "estimated_synthetic_fraction": synthetic_est,
+        "contamination_signal_strength": synthetic_est,
         "calibration_anchors": CALIBRATION,
         "caveats": [
             "Calibrated against DistilGPT-2 (82M) simulations at 5k-document scale, R=0.5",

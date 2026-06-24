@@ -178,10 +178,14 @@ requires care:
 
 | Dataset | Composite | TTR | PPL ratio | Ground truth | Notes |
 |---|---|---|---|---|---|
-| Wikipedia holdout (20%) | PENDING | — | — | Known human | Negative control |
-| TinyStories | 0.667 | 0.061 | 2.143 | 100% GPT-4 | Validation passed |
-| C4 validation | PENDING | — | — | Unknown | Expected 0.15-0.35 |
-| Pile-CC subset | PENDING | — | — | Unknown | Expected 0.20-0.45 |
+| Wikipedia holdout (20%) | 0.026 | 0.227 | 0.905 | Known human | ✓ Negative control passed |
+| TinyStories | 0.667 | 0.061 | 2.143 | 100% GPT-4 | ✓ Validation passed |
+| C4 validation | 0.023 | 0.185 | 0.631 | Human web | Floors at zero, TTR > calibration range |
+| Pile-CC subset | 0.016 | 0.221 | 0.834 | Human web | Floors at zero, TTR > calibration range |
+
+**Reading these scores:** A score near 0 for C4 and Pile-CC does NOT confirm
+they are human. It means they are more diverse than the calibration range
+(G0 TTR=0.112). Web-domain recalibration is required for non-trivial scores.
 
 ---
 
