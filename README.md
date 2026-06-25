@@ -8,17 +8,30 @@ the **perplexity inversion ratio** as the primary collapse detection signal.
 
 ## Key Finding
 
-The perplexity inversion ratio: PPL(G0, text) / PPL(Gk, text), detects
-distributional collapse at the first contaminated generation (k=1) with
-Mann-Whitney U=0, p<0.001, effect_r=0.865. Zero overlap between clean and
-collapsed per-sample distributions.
+## Key Findings
+
+**ppl_Gk, the generating model's own perplexity on its outputs, is the primary
+collapse signal.** It decreases monotonically with both generation number and
+contamination ratio, with zero distribution overlap between G0 and collapsed
+generations (Mann-Whitney U=0, p<0.001, effect_r=0.865).
 
 ```
 Generation k:    0      1      2      3      4
-PPL ratio:    1.000  1.947  2.610  2.725  2.802
+ppl_Gk:        29.01  4.31   2.60   1.92   1.77
               ────── ────── ────── ────── ──────
               clean  ← collapse proceeds →  plateau
 ```
+The PPL inversion ratio (ppl_ref / ppl_Gk) detects collapse within a fixed
+contamination condition but does not correctly order across conditions: as
+collapse deepens, text becomes predictable to all models including the reference,
+causing ppl_ref to decrease alongside ppl_Gk. Use ppl_Gk directly.
+
+**Lexical collapse is statistically significant at the per-document level:**
+- TTR: G0=0.689 → G3=0.352, effect_r=0.688, p<0.001
+- KL divergence: G0=10.77 → G3=11.31, effect_r=0.307, p<0.001
+
+All nine Mann-Whitney tests across three signals × three generation comparisons
+pass Bonferroni correction (threshold p < 0.0017).
 
 ---
 
@@ -125,6 +138,19 @@ ppl_Gk (collapse self-confidence) correctly shows R=0.5 collapses more.
 ppl_G0 (reference surprise) is confounded by domain gap, reference model (WebText)
 finds Wikipedia-like text (R=0.25) less familiar. The ratio must be decomposed
 when comparing across contamination conditions.
+
+### Phase 3: Signal detection across collapse generations (R=0.5, DistilGPT-2)
+
+Signal          | G0     | G1     | G2     | G3     | G4     | effect_r | p
+─────────────────────────────────────────────────────────────────────────────
+ppl_Gk          | 29.01  | 4.31   | 2.60   | 1.92   | 1.77†  | 0.865    | <0.001
+TTR (per-doc)   | 0.689  | 0.481  | 0.395  | 0.352  | —      | 0.688    | <0.001
+KL div (per-doc)| 10.77  | 10.66  | 11.07  | 11.31  | —      | 0.307    | <0.001
+Zipf alpha      | 1.034  | 1.171  | 1.250  | 1.291  | —      | —†       | —
+Entropy (1gram) | 10.54  | 10.45  | 10.27  | 10.22  | —      | —†       | —
+
+† No per-sample distribution available; point estimate only.
+  G4 measured for ppl_Gk only.
 
 ### Phase 5: Contamination Index Pilot
 

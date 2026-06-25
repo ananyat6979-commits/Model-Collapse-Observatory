@@ -6,7 +6,7 @@ with open("phase3_measurements/results/ppl_inversion_wiki_ref.json") as f:
     wiki = json.load(f)
 
 print("="*70)
-print("DECOMPOSED PPL — G0_wiki reference")
+print("DECOMPOSED PPL: G0_wiki reference")
 print("="*70)
 print(f"{'Condition':<14} {'ppl_ref':>9} {'ppl_Gk':>9} {'ratio':>8} {'Collapse order'}")
 print("-"*60)
@@ -28,14 +28,15 @@ gk_r05  = wiki["G3_r05"]["ppl_under_gk"]
 gk_r025 = wiki["G3_r025"]["ppl_under_gk"]
 print(f"  R=0.5:  ppl_Gk = {gk_r05:.3f}")
 print(f"  R=0.25: ppl_Gk = {gk_r025:.3f}")
-print(f"  R=0.5 < R=0.25: {'✓ correct order' if gk_r05 < gk_r025 else '✗ wrong order'}")
+order = "CORRECT ORDER" if gk_r05 < gk_r025 else "WRONG ORDER"
+print(f"  R=0.5 < R=0.25: {order}")
 print()
 
 # Mann-Whitney on ppl_Gk distributions
 r05_gk  = wiki["G3_r05"].get("ppl_gk_per_sample",
           [r for r, k in zip(wiki["G3_r05"].get("ratios_per_sample",[]),
                              range(200))])
-# ppl_Gk is not stored separately — compute from ratio and ppl_ref
+# ppl_Gk is not stored separately, compute from ratio and ppl_ref
 # ratio = ppl_ref / ppl_Gk → ppl_Gk = ppl_ref / ratio
 print("Key finding summary:")
 print(f"  ppl_Gk correctly orders: R=0.5 ({gk_r05:.2f}) < R=0.25 ({gk_r025:.2f})")
