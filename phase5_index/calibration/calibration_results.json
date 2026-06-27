@@ -1,0 +1,132 @@
+[
+  {
+    "true_synthetic_fraction": 0.0,
+    "true_synthetic_pct": 0,
+    "n_docs": 1000,
+    "composite_index": 0.0286,
+    "component_scores": {
+      "lexical_ttr": 0.0,
+      "lexical_kl": 0.0,
+      "ppl_predictability": 0.0,
+      "semantic_coverage": 0.276
+    },
+    "raw": {
+      "lexical": {
+        "ttr": 0.22404,
+        "kl_div_1gram": 4.163425
+      },
+      "semantic": {
+        "semantic_coverage": 0.724
+      },
+      "ppl": {
+        "mean_ppl_under_g0": 47.913,
+        "ppl_ratio_vs_baseline": 0.927608
+      }
+    },
+    "elapsed_minutes": 19.9
+  },
+  {
+    "true_synthetic_fraction": 0.25,
+    "true_synthetic_pct": 25,
+    "n_docs": 1000,
+    "composite_index": 0.0746,
+    "component_scores": {
+      "lexical_ttr": 0.0,
+      "lexical_kl": 0.0,
+      "ppl_predictability": 0.1462,
+      "semantic_coverage": 0.298
+    },
+    "raw": {
+      "lexical": {
+        "ttr": 0.203468,
+        "kl_div_1gram": 4.472236
+      },
+      "semantic": {
+        "semantic_coverage": 0.702
+      },
+      "ppl": {
+        "mean_ppl_under_g0": 35.471,
+        "ppl_ratio_vs_baseline": 1.252983
+      }
+    },
+    "elapsed_minutes": 22.9
+  },
+  {
+    "true_synthetic_fraction": 0.5,
+    "true_synthetic_pct": 50,
+    "n_docs": 1000,
+    "composite_index": 0.1137,
+    "component_scores": {
+      "lexical_ttr": 0.0,
+      "lexical_kl": 0.0,
+      "ppl_predictability": 0.2657,
+      "semantic_coverage": 0.331
+    },
+    "raw": {
+      "lexical": {
+        "ttr": 0.174552,
+        "kl_div_1gram": 4.834387
+      },
+      "semantic": {
+        "semantic_coverage": 0.669
+      },
+      "ppl": {
+        "mean_ppl_under_g0": 30.4487,
+        "ppl_ratio_vs_baseline": 1.45965
+      }
+    },
+    "elapsed_minutes": 19.3
+  },
+  {
+    "true_synthetic_fraction": 0.75,
+    "true_synthetic_pct": 75,
+    "n_docs": 1000,
+    "composite_index": 0.5229,
+    "component_scores": {
+      "lexical_ttr": 0.0,
+      "lexical_kl": 0.6953,
+      "ppl_predictability": 0.9356,
+      "semantic_coverage": 0.344
+    },
+    "raw": {
+      "lexical": {
+        "ttr": 0.14079,
+        "kl_div_1gram": 5.283534
+      },
+      "semantic": {
+        "semantic_coverage": 0.656
+      },
+      "ppl": {
+        "mean_ppl_under_g0": 16.9728,
+        "ppl_ratio_vs_baseline": 2.618571
+      }
+    },
+    "elapsed_minutes": 36.6
+  },
+  {
+    "true_synthetic_fraction": 1.0,
+    "true_synthetic_pct": 100,
+    "n_docs": 1000,
+    "composite_index": 0.7347,
+    "component_scores": {
+      "lexical_ttr": 0.3264,
+      "lexical_kl": 1.0,
+      "ppl_predictability": 1.0,
+      "semantic_coverage": 0.382
+    },
+    "raw": {
+      "lexical": {
+        "ttr": 0.094707,
+        "kl_div_1gram": 5.859672
+      },
+      "semantic": {
+        "semantic_coverage": 0.618
+      },
+      "ppl": {
+        "mean_ppl_under_g0": 5.3694,
+        "ppl_ratio_vs_baseline": 8.277321
+      }
+    },
+    "elapsed_minutes": 14.5
+  }
+]

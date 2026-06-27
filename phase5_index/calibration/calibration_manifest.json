@@ -1,0 +1,46 @@
+{
+  "seed": 42,
+  "n_total_per_mixture": 1000,
+  "synthetic_source": "G3_outputs (DistilGPT-2, R=0.5, k=3)",
+  "human_source": "Wikipedia holdout 20% (seed=42+999, no overlap with training)",
+  "hypothesis": "composite_index increases monotonically with synthetic fraction",
+  "expected": {
+    "0pct": 0.02,
+    "25pct": 0.15,
+    "50pct": 0.35,
+    "75pct": 0.55,
+    "100pct": 0.65
+  },
+  "mixtures": [
+    {
+      "fraction": 0.0,
+      "n_human": 1000,
+      "n_synth": 0,
+      "path": "phase5_index\\calibration\\mixture_000pct_synthetic.jsonl"
+    },
+    {
+      "fraction": 0.25,
+      "n_human": 750,
+      "n_synth": 250,
+      "path": "phase5_index\\calibration\\mixture_025pct_synthetic.jsonl"
+    },
+    {
+      "fraction": 0.5,
+      "n_human": 500,
+      "n_synth": 500,
+      "path": "phase5_index\\calibration\\mixture_050pct_synthetic.jsonl"
+    },
+    {
+      "fraction": 0.75,
+      "n_human": 250,
+      "n_synth": 750,
+      "path": "phase5_index\\calibration\\mixture_075pct_synthetic.jsonl"
+    },
+    {
+      "fraction": 1.0,
+      "n_human": 0,
+      "n_synth": 1000,
+      "path": "phase5_index\\calibration\\mixture_100pct_synthetic.jsonl"
+    }
+  ]
+}

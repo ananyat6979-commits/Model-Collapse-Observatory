@@ -1,0 +1,8 @@
+True Synthetic %  |  Composite Index
+    0%  |  0.0286
+   25%  |  0.0746
+   50%  |  0.1137
+   75%  |  0.5229
+  100%  |  0.7347
+
+Spearman rho=1.0000  p=0.000000
