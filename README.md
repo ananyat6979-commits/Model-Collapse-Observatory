@@ -234,6 +234,20 @@ with GPU T4 x2, Internet ON, dataset mounted.
 
 ---
 
+### Scale Generalization (LLaMA-3.2-1B)
+
+| Gen | ppl_Gk (82M) | ppl_Gk (1B) | Pattern |
+|---|---|---|---|
+| G0 | 29.01 | 5.663 | baseline |
+| G1 | 4.31 | 4.571 | collapse begins |
+| G2 | 2.60 | 3.879 | deepens |
+| G3 | 1.92 | 3.646 | plateau |
+
+ppl_Gk decreases monotonically at both scales. The collapse signal
+is not an artifact of DistilGPT-2's small size.
+
+---
+
 ## Reference Pack
 
 All Phase 1 baseline artifacts are bundled into a single portable file:
