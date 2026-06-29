@@ -1,0 +1,10 @@
+{
+  "corpus_ttr": 0.108983,
+  "entropy_1gram": 11.927449,
+  "entropy_3gram": 19.547549,
+  "zipf_alpha": 1.032463,
+  "laplace_alpha": 1.0,
+  "n_tokens": 1033367,
+  "n_docs": 5000,
+  "source": "allenai/c4 validation split"
+}
