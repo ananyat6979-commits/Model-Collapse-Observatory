@@ -1,4 +1,4 @@
-# SCOPE.md — Model Collapse Observatory
+# SCOPE.md: Model Collapse Observatory
 
 ---
 
@@ -11,7 +11,7 @@ for measuring distributional collapse in LLMs trained on synthetic data.
 before it becomes visible on standard benchmarks, using a four-layer signal hierarchy.
 
 **Novel contribution:** The perplexity inversion ratio and the systematized tail mass
-measurement framework — applied together to form the first public contamination index
+measurement framework, applied together to form the first public contamination index
 for real training datasets.
 
 ---
@@ -141,23 +141,6 @@ HuggingFace Spaces: Streamlit dashboard hosting.
 
 ---
 
-## Publication Strategy
-
-**Option A — Workshop paper (most achievable in 1–2 months):**
-Phase 4 Early Warning Card as a short paper for NeurIPS/ICML workshop on synthetic
-data quality. Framing: "Preliminary empirical evidence for early warning signals in
-the stochastic contamination regime, scoped to DistilGPT-2 at small scale."
-
-**Option B — Datasets Track (requires Phase 5 expansion):**
-Contamination index with ≥3 datasets submitted to NeurIPS Datasets and Benchmarks.
-
-**Option C — Preprint:**
-All five phases as an arXiv preprint. No venue-imposed scale constraints.
-
-Do not try to combine all phases into a single venue submission at this scale.
-
----
-
 ## Honest Limitations
 
 Every paper or preprint from this project must state all of the following:
@@ -187,7 +170,17 @@ Every paper or preprint from this project must state all of the following:
   downloaded and md5-verified and is retained in data/ for provenance.
   The HF snapshot (January 2022) predates the downloaded dump (December 2025).
   Whether this snapshot difference materially affects baseline statistics is
-  an acknowledged uncertainty — it is a reasonable engineering assumption that
+  an acknowledged uncertainty, it is a reasonable engineering assumption that
   English Wikipedia's distributional properties are stable across three years,
   but this has not been empirically verified for this specific project.
   Both the snapshot date and ingestion path are recorded in manifest.json.
+
+**C4 recalibration does not generalize the index (confirmed empirically).**
+C4 (human web text) has TTR=0.109, which is below the DistilGPT-2 G0
+anchor (TTR=0.112). The framework's lexical component scores C4 as more
+collapsed than clean DistilGPT-2 output, an inverted signal. This
+confirms the contamination index detects collapse relative to DistilGPT-2's
+output space, not relative to human text diversity. No web-domain
+recalibration is possible without a web-pretrained reference model.
+The index is valid only for text in the DistilGPT-2 output distribution
+or more collapsed.
