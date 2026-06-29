@@ -1,4 +1,4 @@
-# SCOPE.md: Model Collapse Observatory
+# SCOPE.md - Model Collapse Observatory
 
 ---
 
@@ -34,7 +34,7 @@ in this file. Any paper, preprint, or public artifact must restate these limits.
 These are immutable after Phase 2 begins. Any change requires starting over from Phase 1.
 
 ```yaml
-model:               distilgpt2           # 82M parameters — only supported model
+model:               distilgpt2           # 82M parameters: only supported model
 
 corpus_source:       HuggingFace wikipedia/20220301.en streaming backend
                      # Operational constraint: raw Wikimedia bz2 dump (enwiki-20251201,
@@ -42,7 +42,7 @@ corpus_source:       HuggingFace wikipedia/20220301.en streaming backend
                      # decompression on Windows with limited RAM. The HF streaming
                      # backend processes articles one at a time with no large buffer
                      # allocation. Content source is English Wikipedia. Snapshot date
-                     # difference (2022 vs 2025) is an acknowledged uncertainty —
+                     # difference (2022 vs 2025) is an acknowledged uncertainty 
                      # see Honest Limitations section below.
 
 corpus_hf_dataset:   wikipedia
@@ -53,7 +53,7 @@ corpus_size_docs:    5000
 corpus_size_tokens:  ~500000
 corpus_language:     English only
 
-# Raw dump kept for provenance — not used in ingestion.
+# Raw dump kept for provenance: not used in ingestion.
 corpus_dump_url:     https://dumps.wikimedia.org/enwiki/20251201/enwiki-20251201-pages-articles-multistream.xml.bz2
 corpus_dump_md5:     f4b1a4c7ef3f89f5bd9fc8cae6fbb56
 
@@ -69,7 +69,7 @@ platform_phase1:     Laptop (CPU only)
 platform_phase2:     Kaggle T4
 platform_phase3:     Laptop (dev) + Kaggle T4 (runs)
 platform_phase4:     Laptop (CPU only)
-platform_phase5:     Laptop (CPU only) — TinyStories pilot
+platform_phase5:     Laptop (CPU only), TinyStories pilot
 ```
 
 ---
@@ -118,7 +118,7 @@ MCO operates in the **pre-boundary regime**:
 
 Within this regime, MCO's hypothesis is that early warning IS possible.
 MCO's signals are detectors for the APPROACH to the ZL-IRL boundary.
-Once deterministic truncation occurs and tail mass reaches zero, detection fails —
+Once deterministic truncation occurs and tail mass reaches zero, detection fails,
 consistent with ZL-IRL's finding.
 
 **This framing must appear in:** SCOPE.md (here), any related work section, the
@@ -133,8 +133,8 @@ Phase 4 Early Warning Card, and all Phase 5 contamination index documentation.
 | 1: Baseline | Laptop (CPU only) | Embedding 5k docs with MiniLM takes ~10 min CPU |
 | 2: Simulation | Kaggle T4 | Fine-tuning DistilGPT-2 requires GPU |
 | 3: Measurement | Laptop (dev) + Kaggle (runs) | Modules on laptop; scale runs on Kaggle |
-| 4: Analysis | Laptop (CPU only) | KS/Mann-Whitney on SQLite rows — no GPU needed |
-| 5: Pilot | Laptop (CPU only) | TinyStories 1k sample — CPU sufficient |
+| 4: Analysis | Laptop (CPU only) | KS/Mann-Whitney on SQLite rows, no GPU needed |
+| 5: Pilot | Laptop (CPU only) | TinyStories 1k sample: CPU sufficient |
 
 Colab: debugging and testing only (<20 min sessions). Never for production runs.
 HuggingFace Spaces: Streamlit dashboard hosting.
@@ -147,7 +147,7 @@ Every paper or preprint from this project must state all of the following:
 
 - Results are calibrated at DistilGPT-2 scale (82M). Detection thresholds may not
   generalize to larger models.
-- Corpus is English Wikipedia only (BookCorpus excluded — no reproducible source).
+- Corpus is English Wikipedia only (BookCorpus excluded, no reproducible source).
 - Only one contamination ratio (R=0.5) and one schedule (fixed) are tested.
   Detection order may differ at other ratios.
 - k=3 generations is a small simulation. Longer collapse chains may behave differently.
