@@ -6,8 +6,6 @@ the **perplexity inversion ratio** as the primary collapse detection signal.
 
 ---
 
-## Key Finding
-
 ## Key Findings
 
 **ppl_Gk, the generating model's own perplexity on its outputs, is the primary
