@@ -33,6 +33,19 @@ N_SAMPLES      = 1000   # sample size for pilot — manageable on CPU
 SEED           = 42
 DATASET_NAME   = "roneneldan/TinyStories"
 
+CALIBRATION = {
+    "ttr_g0": 0.112, "ttr_g3": 0.058,
+    "kl_g0": 5.05662, "kl_g3": 5.38296,
+}
+SIGNAL_WEIGHTS = {
+    "lexical_ttr":        0.865,
+    "lexical_kl":         0.865,
+    "ppl_predictability": 0.865,
+    "semantic_coverage":  0.300,
+    # tail mass excluded — domain mismatch makes it unreliable, same as run_dataset.py
+}
+WEIGHT_SUM = sum(SIGNAL_WEIGHTS.values())
+
 
 def load_tinystories(n=N_SAMPLES, seed=SEED):
     print(f"Loading TinyStories (n={n})...")
@@ -230,36 +243,35 @@ def compute_composite_index(lex, sem, tail, ppl):
     """
     Composite contamination index: 0=clean, 1=fully synthetic.
 
-    Each component normalized against Phase 3 G3 (maximally collapsed) values.
-    TinyStories is 100% synthetic — scores should approach 1.0.
+    CANONICAL FORMULA — identical to phase5_index/run_dataset.py's
+    compute_composite(). Unified to fix a formula divergence that made
+    TinyStories not directly comparable to C4/Pile-CC/Wikipedia holdout
+    scores in the same table. `tail` param kept for signature
+    compatibility with callers; unused, consistent with run_dataset.py.
     """
-    scores = {}
+    c = CALIBRATION
+    component_scores = {}
 
-    # Lexical: TTR collapse (G0_ttr=0.112, G3_ttr=0.058)
-    # Lower TTR = more contaminated
-    ttr = lex.get("ttr", 0)
-    ttr_score = max(0, min(1, (0.112 - ttr) / (0.112 - 0.058)))
-    scores["lexical_ttr"] = round(ttr_score, 4)
+    ttr = lex.get("ttr", c["ttr_g0"])
+    ttr_score = max(0.0, min(1.0, (c["ttr_g0"] - ttr) / (c["ttr_g0"] - c["ttr_g3"])))
+    component_scores["lexical_ttr"] = round(ttr_score, 4)
 
-    # KL divergence: higher = more contaminated (G0=5.06, G3=5.38)
-    kl = lex.get("kl_div_1gram", 0)
-    kl_score = max(0, min(1, (kl - 5.06) / (5.38 - 5.06)))
-    scores["lexical_kl"] = round(kl_score, 4)
+    kl = lex.get("kl_div_1gram", c["kl_g0"])
+    kl_score = max(0.0, min(1.0, (kl - c["kl_g0"]) / (c["kl_g3"] - c["kl_g0"])))
+    component_scores["lexical_kl"] = round(kl_score, 4)
 
-    # Semantic coverage: lower = more contaminated
+    ppl_r = ppl.get("ppl_ratio_vs_baseline") or 1.0
+    ppl_score = max(0.0, min(1.0, (ppl_r - 1.0) / (2.73 - 1.0)))
+    component_scores["ppl_predictability"] = round(ppl_score, 4)
+
     cov = sem.get("semantic_coverage", 1.0)
-    # G0 coverage ≈ 0.9, if it drops → more contaminated
-    cov_score = max(0, min(1, 1.0 - cov))
-    scores["semantic_coverage"] = round(cov_score, 4)
+    cov_score = max(0.0, min(1.0, 1.0 - cov))
+    component_scores["semantic_coverage"] = round(cov_score, 4)
 
-    # PPL ratio: higher = G0 finds text more predictable = more synthetic-like
-    ppl_r = ppl.get("ppl_ratio_vs_baseline", 1.0) or 1.0
-    # G0_ppl_ratio=1.0 (baseline), G3_ppl_ratio via inversion ≈ higher
-    ppl_score = max(0, min(1, (ppl_r - 1.0) / 2.0))
-    scores["ppl_predictability"] = round(ppl_score, 4)
+    weighted_sum = sum(SIGNAL_WEIGHTS[k] * component_scores[k] for k in SIGNAL_WEIGHTS)
+    composite = round(weighted_sum / WEIGHT_SUM, 4)
 
-    composite = round(float(np.mean(list(scores.values()))), 4)
-    return composite, scores
+    return composite, component_scores
 
 
 def main():
