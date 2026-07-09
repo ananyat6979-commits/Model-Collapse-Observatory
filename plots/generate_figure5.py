@@ -38,45 +38,39 @@ labels = ["G0\n(no fine-tuning)", "G_human\n(domain adaptation\nonly, no synthet
           "G1\n(R=0.5 synthetic\ncontamination)"]
 colors = ["#2196F3", "#FF9800", "#F44336"]
 
-fig, ax = plt.subplots(figsize=(7.5, 5.5))
-
-x = np.arange(3)
-ax.bar(x, means, yerr=sems, capsize=6, color=colors, alpha=0.85,
-       edgecolor="black", linewidth=1.2, width=0.6, zorder=3)
-
-for i, (m, s) in enumerate(zip(means, sems)):
-    ax.annotate(f"{m:.2f}", xy=(i, m + s + 0.8), ha="center",
-                fontsize=11, fontweight="bold")
-
-ax.set_xticks(x)
-ax.set_xticklabels(labels)
-ax.set_ylabel("ppl_Gk (generating model perplexity on own outputs)")
-ax.set_title("Figure 5: Domain reinforcement ablation\nisolating contamination-specific collapse from domain adaptation")
-ax.grid(axis="y", alpha=0.3, zorder=0)
-
-ax.annotate("", xy=(1, means[1]+sems[1]+2.5), xytext=(0, means[0]+sems[0]+2.5),
-            arrowprops=dict(arrowstyle="-", color="#555", linewidth=1.2,
-                             connectionstyle="bar,fraction=0.05"))
-ax.text(0.5, means[0]+sems[0]+4.5, "Domain adaptation:\n~95% of total drop",
-        ha="center", fontsize=9.5,
-        bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFF3E0",
-                  edgecolor="#FF9800", alpha=0.9))
-
 U, p = stats.mannwhitneyu(g_human_ppls, g1_ppls, alternative="two-sided")
 n1, n2 = len(g_human_ppls), len(g1_ppls)
 z = (U - n1*n2/2) / (n1*n2*(n1+n2+1)/12)**0.5
 effect_r = abs(z) / (n1+n2)**0.5
 
-ax.annotate("", xy=(2, means[2]-sems[2]-0.8), xytext=(1, means[1]-sems[1]-0.8),
-            arrowprops=dict(arrowstyle="-", color="#555", linewidth=1.2,
-                             connectionstyle="bar,fraction=-0.15"))
-ax.text(1.5, min(means[1], means[2]) - 3.2,
-        f"Contamination-specific effect:\np<0.001, effect_r={effect_r:.3f}\n(small but significant)",
-        ha="center", fontsize=9.5,
-        bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFEBEE",
-                  edgecolor="#F44336", alpha=0.9))
-
-ax.set_ylim(-6, max(means) + 8)
+fig, ax = plt.subplots(figsize=(9, 6.5))  # taller canvas
+x = np.arange(3)
+ax.bar(x, means, yerr=sems, capsize=6, color=colors, alpha=0.85,
+       edgecolor="black", linewidth=1.2, width=0.6, zorder=3)
+# Value labels ABOVE error bars, not overlapping the connector line
+for i, (m, s) in enumerate(zip(means, sems)):
+    ax.annotate(f"{m:.2f}", xy=(i, m + s + 1.5), ha="center",
+                fontsize=12, fontweight="bold", zorder=6)
+ax.set_xticks(x)
+ax.set_xticklabels(labels)
+ax.set_ylabel("ppl_Gk (generating model perplexity on own outputs)")
+ax.set_title("Figure 5: Domain reinforcement ablation\nisolating contamination-specific collapse from domain adaptation")
+ax.grid(axis="y", alpha=0.3, zorder=0)
+# Remove the diagonal connector line entirely — it's what's slicing
+# through "29.01". A bar chart doesn't need a trend line connecting
+# bar tops; the bars alone show the drop.
+# Top annotation: place well above G0's bar+error, no line crossing it
+ax.annotate("Domain adaptation:\n~95% of total drop",
+            xy=(0.5, max(means) * 1.15), ha="center", fontsize=10,
+            bbox=dict(boxstyle="round,pad=0.4", facecolor="#FFF3E0",
+                      edgecolor="#FF9800", alpha=0.95), zorder=5)
+# Bottom annotation: place BELOW the x-axis, not overlapping any bar
+ax.annotate(f"Contamination-specific effect: p<0.001, effect_r={effect_r:.3f}\n(small but significant)",
+            xy=(1.5, -0.15), xycoords=("data", "axes fraction"),
+            ha="center", fontsize=9.5,
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFEBEE",
+                      edgecolor="#F44336", alpha=0.95), zorder=5)
+ax.set_ylim(0, max(means) * 1.35)
 plt.tight_layout()
 plt.savefig("plots/figures/fig5_domain_ablation.png", dpi=300, bbox_inches="tight")
 plt.close()
