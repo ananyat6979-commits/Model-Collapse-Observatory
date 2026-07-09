@@ -8,7 +8,7 @@ with open("phase3_measurements/results/lexical_per_doc.json") as f:
 with open("phase3_measurements/results/all_measurements_v2.json") as f:
     ppl_data = {r["generation_k"]: r for r in json.load(f)}
 
-alpha_bonf = 0.01 / (2 * 3)  # 2 signals × 3 comparisons
+alpha_bonf = 0.01 / (3 * 3)  # 3 signals × 3 generations = 9 tests
 
 print("="*65)
 print("FULL STATISTICAL TESTS — All Layers")
