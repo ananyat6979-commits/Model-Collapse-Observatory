@@ -8,6 +8,9 @@ the **perplexity inversion ratio** as the primary collapse detection signal.
 
 ## Key Findings
 
+**TinyStories validation:** framework correctly identifies heavily collapsed text (composite index 0.792/1.0, unified formula).
+
+
 **ppl_Gk, the generating model's own perplexity on its outputs, is the primary
 collapse signal.** It decreases monotonically with both generation number and
 contamination ratio, with zero distribution overlap between G0 and collapsed
@@ -123,7 +126,9 @@ MCO/
 | Tail mass (G0-rel) | 0.020 | 0.056 | 0.056 | 0.056 | 0.054 | ↑ | ✗ |
 | Semantic coverage | 0.000 | 0.000 | 0.000 | 0.000 | 0.645 | — | ✗ |
 
-**Per-document distributions (Mann-Whitney, G0 vs Gk, Bonferroni p < 0.0017):**
+**Per-document distributions (Mann-Whitney, G0 vs Gk, Bonferroni p < 0.0011, 9 tests):**
+
+![Figure 1: ppl_Gk distributions across collapse generations](plots/figures/fig1_ppl_gk_distributions.png)
 
 | Signal | G0 mean | G3 mean | effect_r | p |
 |---|---|---|---|---|
@@ -131,25 +136,7 @@ MCO/
 | TTR (per-doc) | 0.689 | 0.352 | 0.688 | <0.001 |
 | KL (per-doc) | 10.77 | 11.31 | 0.307 | <0.001 |
 
-**Dose-response (ppl_Gk at G3): R=0.5 = 1.92, R=0.25 = 2.65**
-Mann-Whitney p<0.001, effect_r=0.396. R=0.5 collapses more (correct direction).
-
-**Statistical validation (PPL inversion, per-sample):**
-Mann-Whitney U=0, p<0.001, effect_r=0.865 for G0 vs G1, G2, G3.
-Zero overlap between G0 and all collapsed generations.
-
-### Phase 3: R=0.5 vs R=0.25 Decomposition
-
-| Gen | ppl_Gk (R=0.5) | ppl_Gk (R=0.25) | ppl_G0 (R=0.5) | ppl_G0 (R=0.25) |
-|---|---|---|---|---|
-| G1 | 4.31 | 4.89 | 8.22 | 10.51 |
-| G2 | 2.60 | 3.23 | 6.73 | 9.72 |
-| G3 | 1.92 | 2.65 | 5.27 | 9.29 |
-
-ppl_Gk (collapse self-confidence) correctly shows R=0.5 collapses more.
-ppl_G0 (reference surprise) is confounded by domain gap, reference model (WebText)
-finds Wikipedia-like text (R=0.25) less familiar. The ratio must be decomposed
-when comparing across contamination conditions.
+Mann-Whitney U=0, p<0.001, effect_r=0.865 for G0 vs G1, G2, G3 on ppl_Gk. Zero overlap between G0 and all collapsed generations.
 
 ### Phase 3: Signal Detection Across Collapse Generations (R=0.5, DistilGPT-2)
 
@@ -163,14 +150,57 @@ when comparing across contamination conditions.
 
 † No per-sample distribution available; point estimate only. G4 measured for ppl_Gk only.
 
+### Phase 3: R=0.5 vs R=0.25 Decomposition- The Ratio Confound
+
+![Figure 2: The ratio confound, ppl_Gk correctly orders contamination severity; the ratio does not](plots/figures/fig2_ratio_confound.png)
+
+| Gen | ppl_Gk (R=0.5) | ppl_Gk (R=0.25) | ppl_G0 (R=0.5) | ppl_G0 (R=0.25) |
+|---|---|---|---|---|
+| G1 | 4.31 | 4.89 | 8.22 | 10.51 |
+| G2 | 2.60 | 3.23 | 6.73 | 9.72 |
+| G3 | 1.92 | 2.65 | 5.27 | 9.29 |
+
+ppl_Gk (collapse self-confidence) correctly shows R=0.5 collapses more than R=0.25 at every generation (Mann-Whitney p<0.001, effect_r=0.396). The PPL inversion ratio (ppl_G0/ppl_Gk) does not preserve this ordering, even with a domain-matched reference model, the ratio still inverts (see `analyze_wiki_ref.py`). This is because as collapse deepens, generated text becomes predictable to all models, including the reference, causing ppl_G0 to fall alongside ppl_Gk. **Use ppl_Gk directly, not the ratio, for cross-condition comparisons.**
+
+### Scale Generalization: LLaMA-3.2-1B
+
+![Figure 3: ppl_Gk collapse across model scales](plots/figures/fig3_scale_comparison.png)
+
+| Gen | ppl_Gk (DistilGPT-2, 82M) | ppl_Gk (LLaMA-3.2-1B) |
+|---|---|---|
+| G0 | 29.01 | 5.66 |
+| G1 | 4.31 (−85.1%) | 4.57 (−19.3%) |
+| G2 | 2.60 (−91.0%) | 3.88 (−31.4%) |
+| G3 | 1.92 (−93.4%) | 3.65 (−35.6%) |
+
+ppl_Gk decreases monotonically at both scales (direction confirmed). Collapse magnitude is substantially attenuated at 1B scale (35.6% vs 93.4% total drop) and distribution overlap is greater (effect_r=0.558 at LLaMA-1B G0-vs-G3 vs 0.865 at DistilGPT-2). LLaMA was fine-tuned for 1,000 steps per generation vs DistilGPT-2's 3,000, this training-budget difference confounds the scale comparison and is not yet resolved. Treat this as directional evidence, not confirmed scale generalization.
+
+### Domain Reinforcement Ablation
+
+![Figure 5: Domain reinforcement ablation isolating contamination-specific collapse from domain adaptation](plots/figures/fig5_domain_ablation.png)
+
+| Condition | ppl_Gk | Interpretation |
+|---|---|---|
+| G0 (no fine-tuning) | 29.01 | Baseline |
+| G_human (fine-tuned, no synthetic data) | 5.49 | Domain adaptation only |
+| G1 (fine-tuned, R=0.5 synthetic) | 4.31 | Domain adaptation + contamination |
+
+A held-out control, fine-tuning DistilGPT-2 on human-only Wikipedia text for an identical training budget to G1, with zero synthetic data, shows that **~95% of the raw G0-to-G1 ppl_Gk drop is explained by domain adaptation, not synthetic contamination.** The residual contamination-specific effect (G_human vs G1) is small but statistically significant: Mann-Whitney p<0.001, effect_r=0.224. This is a required control for any collapse study using a corpus the base model partially knows from pretraining.
+
 ### Phase 5: Contamination Index Pilot
+
+![Figure 4: Ground truth calibration curve](plots/figures/fig4_calibration_curve.png)
+
+**Ground truth calibration** (synthetic/human mixtures at known fractions): Spearman ρ=1.000, p<0.001. Monotonic but non-linear, the index is largely insensitive below 50% synthetic content and rises sharply between 50–100%.
 
 | Dataset | Composite | Ground truth |
 |---|---|---|
-| Wikipedia holdout (20%) | 0.026 | Known human,  negative control ✓ |
-| TinyStories | 0.7924| 100% GPT-4 synthetic,  validation ✓ |
+| Wikipedia holdout (20%) | 0.026 | Known human, negative control ✓ |
+| TinyStories | 0.792 | 100% GPT-4 synthetic, validation ✓ |
 | C4 validation | 0.023 | Human web (floors at zero, see limitations) |
 | Pile-CC | 0.016 | Human web (floors at zero, see limitations) |
+
+All four scores now use the same canonical weighted formula (unified 2026; TinyStories was previously reported as 0.667 under a different, non-comparable formula).
 
 ---
 
