@@ -25,8 +25,6 @@ streamlit==1.32.2          # Phase 3 deliverable
 # Experiment tracking
 wandb==0.16.4              # W&B (Kaggle sessions only)
 
-# SQLite interface (stdlib, no pin needed)
-# better-sqlite3 is used by the MCP server (separate package.json)
 
 # Dev tools
 pytest==8.1.0

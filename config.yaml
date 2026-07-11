@@ -64,7 +64,7 @@ semantic_coverage_gmm_components: 10 # GMM modes for coverage estimation
 
 # --- Statistical Tests (Phase 4) ---
 significance_threshold: 0.01
-bonferroni_n_tests: 12              # 4 layers × 3 generations
+bonferroni_n_tests: 9              # 3 layers × 3 generations
 effect_size_threshold: 0.3         # Cohen's d minimum for "first detection"
 
 # --- Reproducibility (fill in after first pipeline run) ---

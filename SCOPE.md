@@ -184,3 +184,14 @@ output space, not relative to human text diversity. No web-domain
 recalibration is possible without a web-pretrained reference model.
 The index is valid only for text in the DistilGPT-2 output distribution
 or more collapsed.
+
+## Relationship to Prior Work
+
+Gambetta et al. (arXiv 2410.12341) introduce "surplexity", a model's own
+perplexity on candidate text, as a training-data filter for collapse
+mitigation. MCO's ppl_Gk is the same mathematical object (a model's
+self-perplexity) but used for a different purpose: detection and
+measurement of collapse depth, not filtering. Neither the ratio confound
+finding (Figure 2) nor the domain-reinforcement decomposition (Figure 5)
+appears in Gambetta et al. MCO is best read as a detection-and-measurement
+complement to Surplexity's mitigation framing, not a competing claim.
