@@ -151,18 +151,17 @@ ppl_G0 (reference surprise) is confounded by domain gap, reference model (WebTex
 finds Wikipedia-like text (R=0.25) less familiar. The ratio must be decomposed
 when comparing across contamination conditions.
 
-### Phase 3: Signal detection across collapse generations (R=0.5, DistilGPT-2)
+### Phase 3: Signal Detection Across Collapse Generations (R=0.5, DistilGPT-2)
 
-Signal          | G0     | G1     | G2     | G3     | G4     | effect_r | p
-─────────────────────────────────────────────────────────────────────────────
-ppl_Gk          | 29.01  | 4.31   | 2.60   | 1.92   | 1.77†  | 0.865    | <0.001
-TTR (per-doc)   | 0.689  | 0.481  | 0.395  | 0.352  | —      | 0.688    | <0.001
-KL div (per-doc)| 10.77  | 10.66  | 11.07  | 11.31  | —      | 0.307    | <0.001
-Zipf alpha      | 1.034  | 1.171  | 1.250  | 1.291  | —      | —†       | —
-Entropy (1gram) | 10.54  | 10.45  | 10.27  | 10.22  | —      | —†       | —
+| Signal | G0 | G1 | G2 | G3 | G4 | effect_r | p |
+|---|---|---|---|---|---|---|---|
+| ppl_Gk | 29.01 | 4.31 | 2.60 | 1.92 | 1.77† | 0.865 | <0.001 |
+| TTR (per-doc) | 0.689 | 0.481 | 0.395 | 0.352 | — | 0.688 | <0.001 |
+| KL div (per-doc) | 10.77 | 10.66 | 11.07 | 11.31 | — | 0.307 | <0.001 |
+| Zipf alpha | 1.034 | 1.171 | 1.250 | 1.291 | — | —† | — |
+| Entropy (1gram) | 10.54 | 10.45 | 10.27 | 10.22 | — | —† | — |
 
-† No per-sample distribution available; point estimate only.
-  G4 measured for ppl_Gk only.
+† No per-sample distribution available; point estimate only. G4 measured for ppl_Gk only.
 
 ### Phase 5: Contamination Index Pilot
 
