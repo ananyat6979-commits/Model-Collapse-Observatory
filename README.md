@@ -44,7 +44,7 @@ All results are scoped to:
 - **Language:** English only
 
 The framework correctly identifies strongly collapsed synthetic text (TinyStories,
-composite index 0.667/1.0). It does not generalize to diverse human web corpora
+composite index 0.7924/1.0). It does not generalize to diverse human web corpora
 (C4, Pile-CC) without domain-matched recalibration, a documented limitation.
 
 ---
@@ -88,7 +88,7 @@ MCO/
 │   ├── run_dataset.py         # multi-dataset scoring
 │   ├── INDEX_SCHEMA.md        # public schema + methodology
 │   └── results/
-│       ├── tinystories_index.json       # composite 0.667 ✓
+│       ├── tinystories_index.json       # composite 0.7924 ✓
 │       ├── wikipedia_holdout_index.json # composite 0.026 (negative control ✓)
 │       ├── c4_index.json                # composite 0.023
 │       └── pile_cc_index.json           # composite 0.016
@@ -169,7 +169,7 @@ Entropy (1gram) | 10.54  | 10.45  | 10.27  | 10.22  | —      | —†       | 
 | Dataset | Composite | Ground truth |
 |---|---|---|
 | Wikipedia holdout (20%) | 0.026 | Known human,  negative control ✓ |
-| TinyStories | 0.667 | 100% GPT-4 synthetic,  validation ✓ |
+| TinyStories | 0.7924| 100% GPT-4 synthetic,  validation ✓ |
 | C4 validation | 0.023 | Human web (floors at zero, see limitations) |
 | Pile-CC | 0.016 | Human web (floors at zero, see limitations) |
 
