@@ -1,4 +1,4 @@
-# MCO Contamination Index — Public Schema v1.0
+# MCO Contamination Index: Public Schema v1.0
 
 This document defines the schema for contamination index entries,
 the minimum reproducibility bar for new submissions, and the methodology
@@ -10,32 +10,32 @@ for interpreting scores.
 
 ```json
 {
-  "dataset_name": "string — canonical HuggingFace dataset ID or descriptive name",
-  "dataset_version": "string — version tag or date",
-  "dataset_source_url": "string — publicly accessible URL",
-  "ground_truth": "string — known/unknown/partial + description",
-  "sample_size": "integer — number of documents scored",
-  "sample_strategy": "string — how documents were sampled",
-  "measurement_date": "string — YYYY-MM-DD",
-  "encoder_id": "string — HuggingFace model ID of frozen reference encoder",
-  "reference_model": "string — model used for PPL inversion measurement",
+  "dataset_name": "string- canonical HuggingFace dataset ID or descriptive name",
+  "dataset_version": "string- version tag or date",
+  "dataset_source_url": "string- publicly accessible URL",
+  "ground_truth": "string- known/unknown/partial + description",
+  "sample_size": "integer- number of documents scored",
+  "sample_strategy": "string- how documents were sampled",
+  "measurement_date": "string- YYYY-MM-DD",
+  "encoder_id": "string- HuggingFace model ID of frozen reference encoder",
+  "reference_model": "string- model used for PPL inversion measurement",
 
   "scores": {
-    "ttr": "float — type-token ratio of sampled documents",
-    "entropy_1gram": "float — unigram Shannon entropy (bits)",
-    "kl_div_1gram": "float — KL(generated || Wikipedia baseline) in bits",
-    "avg_pairwise_cos_dist": "float — avg cosine distance in encoder space",
-    "semantic_coverage": "float — NN coverage vs Wikipedia baseline embeddings",
-    "mean_ppl_under_g0": "float — mean perplexity under reference model",
-    "ppl_ratio_vs_baseline": "float — baseline_ppl / dataset_ppl",
-    "composite_contamination_index": "float — weighted composite, 0-1"
+    "ttr": "float- type-token ratio of sampled documents",
+    "entropy_1gram": "float- unigram Shannon entropy (bits)",
+    "kl_div_1gram": "float- KL(generated || Wikipedia baseline) in bits",
+    "avg_pairwise_cos_dist": "float- avg cosine distance in encoder space",
+    "semantic_coverage": "float- NN coverage vs Wikipedia baseline embeddings",
+    "mean_ppl_under_g0": "float- mean perplexity under reference model",
+    "ppl_ratio_vs_baseline": "float- baseline_ppl / dataset_ppl",
+    "composite_contamination_index": "float- weighted composite, 0-1"
   },
 
   "component_scores": {
-    "lexical_ttr": "float — 0-1, normalized TTR contamination signal",
-    "lexical_kl": "float — 0-1, normalized KL divergence signal",
-    "ppl_predictability": "float — 0-1, normalized PPL ratio signal",
-    "semantic_coverage": "float — 0-1, inverted coverage signal"
+    "lexical_ttr": "float- 0-1, normalized TTR contamination signal",
+    "lexical_kl": "float- 0-1, normalized KL divergence signal",
+    "ppl_predictability": "float- 0-1, normalized PPL ratio signal",
+    "semantic_coverage": "float- 0-1, inverted coverage signal"
   },
 
   "signal_weights_used": {
@@ -46,14 +46,14 @@ for interpreting scores.
   },
 
   "estimated_synthetic_fraction": {
-    "point_estimate": "float — composite index value (see caveats)",
+    "point_estimate": "float- composite index value (see caveats)",
     "ci_lower_95": "float",
     "ci_upper_95": "float",
     "estimation_method": "string"
   },
 
-  "caveats": ["array of strings — required"],
-  "full_measurements": "object — raw layer outputs for reproducibility"
+  "caveats": ["array of strings- required"],
+  "full_measurements": "object- raw layer outputs for reproducibility"
 }
 ```
 
@@ -88,12 +88,12 @@ All scores are normalized against Phase 3 simulation results:
 | G0 (k=0, clean) | 0.1123 | 5.057 | 1.000 | Phase 3, DistilGPT-2 |
 | G3 (k=3, R=0.5) | 0.0585 | 5.383 | 2.725 | Phase 3, DistilGPT-2 |
 | Wikipedia holdout | expected < 0.20 | — | — | Negative control |
-| TinyStories | 0.667 | — | — | Known 100% synthetic |
+| TinyStories |  0.7924 | — | — | Known 100% synthetic |
 
 **Signal weights** are derived from Phase 4 Mann-Whitney effect sizes:
 - lexical_ttr, lexical_kl, ppl_predictability: weight=0.865 (large effect, U=0)
 - semantic_coverage: weight=0.300 (weak signal at 5k document scale)
-- tail mass: **excluded** — domain-dependent, not portable across domains
+- tail mass: **excluded**, domain-dependent, not portable across domains
 
 ---
 
@@ -153,7 +153,7 @@ Publishing contamination scores for datasets produced by specific organizations
 requires care:
 
 1. **Report scores, not verdicts.** A high composite index means "statistically
-   different from Wikipedia human text" — not "this organization used AI."
+   different from Wikipedia human text", not "this organization used AI."
    Many legitimate causes can raise the score (domain mismatch, writing style,
    topic distribution).
 
@@ -179,7 +179,7 @@ requires care:
 | Dataset | Composite | TTR | PPL ratio | Ground truth | Notes |
 |---|---|---|---|---|---|
 | Wikipedia holdout (20%) | 0.026 | 0.227 | 0.905 | Known human | ✓ Negative control passed |
-| TinyStories | 0.667 | 0.061 | 2.143 | 100% GPT-4 | ✓ Validation passed |
+| TinyStories |  0.7924 | 0.061 | 2.143 | 100% GPT-4 | ✓ Validation passed |
 | C4 validation | 0.023 | 0.185 | 0.631 | Human web | Floors at zero, TTR > calibration range |
 | Pile-CC subset | 0.016 | 0.221 | 0.834 | Human web | Floors at zero, TTR > calibration range |
 
