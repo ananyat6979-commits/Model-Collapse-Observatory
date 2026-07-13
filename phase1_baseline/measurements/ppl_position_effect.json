@@ -1,0 +1,284 @@
+{
+  "experiment_id": "EXP-011",
+  "purpose": "Test whether low context-per-token (a consequence of this corpus's <=135 token cap) explains the 44.4 vs 15-30 gap, reconciling EXP-008's flat length-PPL correlation with the visually-confirmed truncation artifacts in at-cap documents.",
+  "n_documents": 5000,
+  "position_bucket_size": 15,
+  "position_buckets": {
+    "2-16": {
+      "n_tokens": 75000,
+      "mean_loss": 4.9955,
+      "implied_ppl": 147.7431
+    },
+    "17-31": {
+      "n_tokens": 75000,
+      "mean_loss": 3.5481,
+      "implied_ppl": 34.7482
+    },
+    "32-46": {
+      "n_tokens": 75000,
+      "mean_loss": 3.5935,
+      "implied_ppl": 36.3618
+    },
+    "47-61": {
+      "n_tokens": 75000,
+      "mean_loss": 3.6059,
+      "implied_ppl": 36.8132
+    },
+    "62-76": {
+      "n_tokens": 74926,
+      "mean_loss": 3.608,
+      "implied_ppl": 36.8918
+    },
+    "77-91": {
+      "n_tokens": 73719,
+      "mean_loss": 3.5935,
+      "implied_ppl": 36.3618
+    },
+    "92-106": {
+      "n_tokens": 71381,
+      "mean_loss": 3.5287,
+      "implied_ppl": 34.0786
+    },
+    "107-121": {
+      "n_tokens": 68503,
+      "mean_loss": 3.518,
+      "implied_ppl": 33.7167
+    },
+    "122-136": {
+      "n_tokens": 65497,
+      "mean_loss": 3.5349,
+      "implied_ppl": 34.2931
+    },
+    "137-151": {
+      "n_tokens": 62631,
+      "mean_loss": 3.5432,
+      "implied_ppl": 34.578
+    },
+    "152-166": {
+      "n_tokens": 57752,
+      "mean_loss": 3.5245,
+      "implied_ppl": 33.9362
+    },
+    "167-181": {
+      "n_tokens": 41802,
+      "mean_loss": 3.5562,
+      "implied_ppl": 35.0307
+    },
+    "182-196": {
+      "n_tokens": 23604,
+      "mean_loss": 3.5117,
+      "implied_ppl": 33.5053
+    },
+    "197-211": {
+      "n_tokens": 12320,
+      "mean_loss": 3.4672,
+      "implied_ppl": 32.0469
+    },
+    "212-226": {
+      "n_tokens": 7119,
+      "mean_loss": 3.4051,
+      "implied_ppl": 30.1176
+    },
+    "227-241": {
+      "n_tokens": 4238,
+      "mean_loss": 3.4203,
+      "implied_ppl": 30.5799
+    },
+    "242-256": {
+      "n_tokens": 2610,
+      "mean_loss": 3.231,
+      "implied_ppl": 25.3055
+    },
+    "257-271": {
+      "n_tokens": 1752,
+      "mean_loss": 3.2387,
+      "implied_ppl": 25.5016
+    },
+    "272-286": {
+      "n_tokens": 1302,
+      "mean_loss": 3.0934,
+      "implied_ppl": 22.0522
+    },
+    "287-301": {
+      "n_tokens": 945,
+      "mean_loss": 2.7171,
+      "implied_ppl": 15.1363
+    },
+    "302-316": {
+      "n_tokens": 655,
+      "mean_loss": 2.1477,
+      "implied_ppl": 8.5651
+    },
+    "317-331": {
+      "n_tokens": 548,
+      "mean_loss": 2.3649,
+      "implied_ppl": 10.6425
+    },
+    "332-346": {
+      "n_tokens": 471,
+      "mean_loss": 2.1678,
+      "implied_ppl": 8.7392
+    },
+    "347-361": {
+      "n_tokens": 405,
+      "mean_loss": 2.2437,
+      "implied_ppl": 9.4281
+    },
+    "362-376": {
+      "n_tokens": 320,
+      "mean_loss": 1.8379,
+      "implied_ppl": 6.2831
+    },
+    "377-391": {
+      "n_tokens": 244,
+      "mean_loss": 1.9157,
+      "implied_ppl": 6.7914
+    },
+    "392-406": {
+      "n_tokens": 193,
+      "mean_loss": 2.2102,
+      "implied_ppl": 9.1174
+    },
+    "407-421": {
+      "n_tokens": 125,
+      "mean_loss": 2.6998,
+      "implied_ppl": 14.8771
+    },
+    "422-436": {
+      "n_tokens": 65,
+      "mean_loss": 3.9775,
+      "implied_ppl": 53.3845
+    },
+    "437-451": {
+      "n_tokens": 30,
+      "mean_loss": 1.8135,
+      "implied_ppl": 6.132
+    },
+    "452-466": {
+      "n_tokens": 30,
+      "mean_loss": 1.2228,
+      "implied_ppl": 3.3968
+    },
+    "467-481": {
+      "n_tokens": 30,
+      "mean_loss": 1.5165,
+      "implied_ppl": 4.5565
+    },
+    "482-496": {
+      "n_tokens": 30,
+      "mean_loss": 2.2628,
+      "implied_ppl": 9.6101
+    },
+    "497-511": {
+      "n_tokens": 30,
+      "mean_loss": 2.9957,
+      "implied_ppl": 19.9985
+    },
+    "512-526": {
+      "n_tokens": 30,
+      "mean_loss": 0.3115,
+      "implied_ppl": 1.3654
+    },
+    "527-541": {
+      "n_tokens": 30,
+      "mean_loss": 2.3162,
+      "implied_ppl": 10.1367
+    },
+    "542-556": {
+      "n_tokens": 30,
+      "mean_loss": 2.8231,
+      "implied_ppl": 16.8286
+    },
+    "557-571": {
+      "n_tokens": 30,
+      "mean_loss": 1.9128,
+      "implied_ppl": 6.7718
+    },
+    "572-586": {
+      "n_tokens": 30,
+      "mean_loss": 2.675,
+      "implied_ppl": 14.512
+    },
+    "587-601": {
+      "n_tokens": 30,
+      "mean_loss": 1.8244,
+      "implied_ppl": 6.1989
+    },
+    "602-616": {
+      "n_tokens": 30,
+      "mean_loss": 2.9345,
+      "implied_ppl": 18.8121
+    },
+    "617-631": {
+      "n_tokens": 29,
+      "mean_loss": 2.6613,
+      "implied_ppl": 14.3145
+    },
+    "632-646": {
+      "n_tokens": 15,
+      "mean_loss": 0.998,
+      "implied_ppl": 2.7127
+    },
+    "647-661": {
+      "n_tokens": 15,
+      "mean_loss": 2.2205,
+      "implied_ppl": 9.2116
+    },
+    "662-676": {
+      "n_tokens": 15,
+      "mean_loss": 3.2806,
+      "implied_ppl": 26.5924
+    },
+    "677-691": {
+      "n_tokens": 15,
+      "mean_loss": 1.43,
+      "implied_ppl": 4.1787
+    },
+    "692-706": {
+      "n_tokens": 15,
+      "mean_loss": 0.054,
+      "implied_ppl": 1.0554
+    },
+    "707-721": {
+      "n_tokens": 15,
+      "mean_loss": 2.5116,
+      "implied_ppl": 12.3242
+    },
+    "722-736": {
+      "n_tokens": 15,
+      "mean_loss": 2.8761,
+      "implied_ppl": 17.7441
+    },
+    "737-751": {
+      "n_tokens": 15,
+      "mean_loss": 4.5634,
+      "implied_ppl": 95.9095
+    },
+    "752-766": {
+      "n_tokens": 15,
+      "mean_loss": 2.9125,
+      "implied_ppl": 18.4027
+    },
+    "767-781": {
+      "n_tokens": 15,
+      "mean_loss": 2.5809,
+      "implied_ppl": 13.2086
+    },
+    "782-796": {
+      "n_tokens": 3,
+      "mean_loss": 4.7106,
+      "implied_ppl": 111.1159
+    }
+  },
+  "position_ppl_monotonic_decreasing": false,
+  "tail_truncation_comparison": {
+    "at_cap_n_tokens": 16955,
+    "at_cap_mean_loss": 3.5053,
+    "at_cap_implied_ppl": 33.2914,
+    "under_cap_n_tokens": 2415,
+    "under_cap_mean_loss": 3.2357,
+    "under_cap_implied_ppl": 25.4242,
+    "mann_whitney_u": 22028791.0,
+    "p_value_at_cap_greater": 7.206357790762888e-10
+  }
+}
