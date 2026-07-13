@@ -1,0 +1,46 @@
+{
+  "experiment_id": "EXP-008",
+  "purpose": "Resolve Phase 1 PPL-gate gap (44.4445 vs documented 15-30 expected range) \u2014 test document-length sensitivity using the PRODUCTION compute_perplexity() method, not a reimplementation.",
+  "corpus_hash": "73a42a1fc43b342280e83410c77d8291b2f1a8bd0f0cb48ead56598feca4e395",
+  "model_id": "distilgpt2",
+  "seed": 42,
+  "n_documents_tested": 5000,
+  "is_full_corpus": true,
+  "n_valid": 5000,
+  "n_invalid": 0,
+  "full_sample_mean_ppl": 44.4445,
+  "full_sample_median_ppl": 39.7396,
+  "reference_baseline_mean_ppl": 44.4445,
+  "spearman_length_ppl": {
+    "rho": -0.0358,
+    "p_value": 0.0113341418704933
+  },
+  "length_buckets": {
+    "0-74": {
+      "n": 559,
+      "mean_ppl": 50.236,
+      "median_ppl": 44.4953,
+      "std_ppl": 26.1582
+    },
+    "75-94": {
+      "n": 426,
+      "mean_ppl": 44.1678,
+      "median_ppl": 41.0452,
+      "std_ppl": 22.348
+    },
+    "95-114": {
+      "n": 369,
+      "mean_ppl": 39.614,
+      "median_ppl": 36.8372,
+      "std_ppl": 18.6185
+    },
+    "115-135": {
+      "n": 3646,
+      "mean_ppl": 44.0778,
+      "median_ppl": 39.3236,
+      "std_ppl": 23.8023
+    }
+  },
+  "bucket_means_monotonic_decreasing": false,
+  "hypothesis_supported": false
+}
