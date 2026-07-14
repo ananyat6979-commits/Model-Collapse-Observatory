@@ -1,0 +1,12 @@
+{
+  "experiment_id": "EXP-012",
+  "purpose": "Exact (not estimated) computation of document-level PPL with cold-start region removed, to replace the informal back-of-envelope estimate in EXP-011's write-up.",
+  "n_documents": 5000,
+  "whole_document_mean_ppl": 44.4444,
+  "reference_baseline_mean_ppl": 44.4445,
+  "reproduction_check_passed": true,
+  "mean_ppl_excluding_first_16_tokens": 39.4612,
+  "reduction_from_coldstart_removal": 4.9832,
+  "reference_range_midpoint": 22.5,
+  "remaining_gap_after_coldstart_removal": 16.9612
+}
