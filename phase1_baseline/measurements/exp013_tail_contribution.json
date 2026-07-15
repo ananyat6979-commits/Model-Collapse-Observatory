@@ -1,0 +1,22 @@
+{
+  "experiment_id": "EXP-013",
+  "purpose": "Exact, non-estimated quantification of the truncation-tail contribution to whole-document PPL, completing the decomposition EXP-012 began for cold-start alone.",
+  "n_documents": 5000,
+  "n_at_cap": 3391,
+  "n_under_cap_or_mid": 1609,
+  "coldstart_exclude_tokens": 16,
+  "tail_exclude_tokens": 5,
+  "at_cap_min_tokens_threshold": 130,
+  "whole_document_mean_ppl": 39.5366,
+  "excl_coldstart_mean_ppl": 34.6637,
+  "excl_coldstart_and_tail_mean_ppl": 34.6997,
+  "coldstart_reproduction_check_passed": false,
+  "coldstart_reduction_ppl_points": 4.8729,
+  "additional_tail_reduction_ppl_points": -0.036,
+  "total_reduction_ppl_points": 4.8368,
+  "reference_midpoint": 22.5,
+  "total_gap_ppl_points": 17.0366,
+  "pct_gap_explained_coldstart_only": 28.6,
+  "pct_gap_explained_coldstart_and_tail": 28.39,
+  "remaining_unexplained_gap_ppl_points": 12.1997
+}
