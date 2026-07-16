@@ -18,7 +18,7 @@ three document-level means across the full 5000-document corpus:
   2. excl_coldstart_mean_ppl        - first 16 tokens removed (EXP-012
                                         reproduction check, must match
                                         39.4612 or something has drifted)
-  3. excl_coldstart_and_tail_mean_ppl: first 16 tokens AND, for
+  3. excl_coldstart_and_tail_mean_ppl, first 16 tokens AND, for
      documents at or near the 135-token cap (>=130 whitespace tokens,
      the same threshold EXP-011 used), the last 5 tokens, removed.
 
@@ -81,9 +81,9 @@ def main():
     print(f"\nLoading {MODEL_ID}...")
     model, tokenizer = load_g0_model(MODEL_ID, device="cpu")
 
-    whole_doc_losses = []
-    excl_coldstart_losses = []
-    excl_coldstart_and_tail_losses = []
+    whole_doc_ppls = []
+    excl_coldstart_ppls = []
+    excl_coldstart_and_tail_ppls = []
     n_at_cap = 0
     n_under_cap = 0
 
@@ -104,14 +104,25 @@ def main():
         else:
             n_under_cap += 1
 
-        # Whole document, unmodified.
-        whole_doc_losses.append(float(np.mean(losses)))
+        # Whole document, unmodified. PER-DOCUMENT perplexity computed
+        # first (exp of that document's mean loss), matching
+        # compute_perplexity()/compute_ppl_baseline_stats() exactly.
+        # The corpus-level statistic is the ARITHMETIC MEAN of these
+        # per-document values, not exp(mean(loss)) across documents.
+        # EXP-012 confirmed this is the correct convention (reproduced
+        # 44.4444 against reference 44.4445); an earlier version of this
+        # script used exp(mean(loss)) instead, which is a mean-of-ratios
+        # vs exp-of-mean-of-ratios mismatch and, by Jensen's inequality,
+        # is guaranteed to under-report the mean on this right-skewed
+        # distribution. Do not change this back without re-verifying
+        # against ppl_baseline.json's aggregation method.
+        whole_doc_ppls.append(float(np.exp(np.mean(losses))))
 
         # Cold-start removed. If a document is too short to have tokens
         # past position 16, it cannot contribute to this condition,
         # matching EXP-012's exclusion rule exactly.
         if len(losses) > COLDSTART_EXCLUDE:
-            excl_coldstart_losses.append(float(np.mean(losses[COLDSTART_EXCLUDE:])))
+            excl_coldstart_ppls.append(float(np.exp(np.mean(losses[COLDSTART_EXCLUDE:]))))
 
         # Cold-start removed AND, for at-cap documents only, the last
         # TAIL_EXCLUDE tokens also removed. Under-cap documents are
@@ -122,22 +133,25 @@ def main():
         if is_at_cap:
             end = len(losses) - TAIL_EXCLUDE
             if end > COLDSTART_EXCLUDE:
-                excl_coldstart_and_tail_losses.append(
-                    float(np.mean(losses[COLDSTART_EXCLUDE:end]))
+                excl_coldstart_and_tail_ppls.append(
+                    float(np.exp(np.mean(losses[COLDSTART_EXCLUDE:end])))
                 )
         else:
             if len(losses) > COLDSTART_EXCLUDE:
-                excl_coldstart_and_tail_losses.append(
-                    float(np.mean(losses[COLDSTART_EXCLUDE:]))
+                excl_coldstart_and_tail_ppls.append(
+                    float(np.exp(np.mean(losses[COLDSTART_EXCLUDE:])))
                 )
 
     elapsed = time.time() - t0
     print(f"  Done in {elapsed:.0f}s")
     print(f"  at_cap documents: {n_at_cap}   under_cap-or-mid documents: {n_under_cap}")
 
-    whole_doc_mean_ppl = float(np.exp(np.mean(whole_doc_losses)))
-    excl_coldstart_mean_ppl = float(np.exp(np.mean(excl_coldstart_losses)))
-    excl_both_mean_ppl = float(np.exp(np.mean(excl_coldstart_and_tail_losses)))
+    # ARITHMETIC MEAN of per-document perplexities, matching the
+    # original baseline's convention exactly. Each list already holds
+    # one exp(mean(loss)) value per document, not raw losses.
+    whole_doc_mean_ppl = float(np.mean(whole_doc_ppls))
+    excl_coldstart_mean_ppl = float(np.mean(excl_coldstart_ppls))
+    excl_both_mean_ppl = float(np.mean(excl_coldstart_and_tail_ppls))
 
     coldstart_reduction = whole_doc_mean_ppl - excl_coldstart_mean_ppl
     tail_reduction = excl_coldstart_mean_ppl - excl_both_mean_ppl
